@@ -6,7 +6,7 @@ This template provides a **starting point** (not a full setup) and instructions 
 available on a stable subdomain of your live Cloudflare-hosted website. This solves two main problems:
 
 - Enables secure access to some local data without opening your entire machine to the public internet
-- Provides stable URLs for self-hosted tools that need a permanent HTTPS endpoint
+- Provides stable URLs for tools that need to access your self-hosted services with permanent HTTPS endpoints
 
 ## Why this exists
 At [Hyperchess](https://hyperchess.ai) ([GitHub](https://github.com/hyprchs/)), we tunnel a few key internal services to subdomains of https://hyperchess.ai:
