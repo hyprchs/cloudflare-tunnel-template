@@ -4,4 +4,4 @@ services:
     restart: unless-stopped
     command: tunnel --config /etc/cloudflared/config.yml --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN:?set CLOUDFLARE_TUNNEL_TOKEN}
     volumes:
-      - ../config/cloudflared.yml:/etc/cloudflared/config.yml:ro
+      - ./cloudflared.yml:/etc/cloudflared/config.yml:ro

@@ -56,7 +56,7 @@ cp compose/env.example .env
 # Set CLOUDFLARE_TUNNEL_TOKEN=...
 ```
 
-### 4) Update `config/cloudflared.yml`
+### 4) Update `compose/cloudflared.yml`
 - Set `hostname` to your public hostname (example: `mlflow.hyperchess.ai`)
 - Set `service` to your local upstream
   - If your service runs on the host: `http://host.docker.internal:5050`
@@ -70,4 +70,4 @@ docker compose up -d
 ## Files
 - `compose/docker-compose.yml` — runs cloudflared
 - `compose/env.example` — your token
-- `config/cloudflared.yml` — hostname + upstream mapping
+- `compose/cloudflared.yml` — hostname + upstream mapping
