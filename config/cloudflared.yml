@@ -1,0 +1,4 @@
+ingress:
+  - hostname: mlflow.hyperchess.ai
+    service: http://host.docker.internal:5050
+  - service: http_status:404
