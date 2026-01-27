@@ -32,7 +32,8 @@ Cloudflare Zero Trust → **Networks** → **Tunnels**:
 - Add a **Public Hostname**:
   - Hostname: `mlflow.<your-domain>` (example: `mlflow.hyperchess.ai`)
   - Service type: **HTTP**
-  - Service URL: `http://127.0.0.1:5050` (or your local port)
+  - Service URL: `http://host.docker.internal:5050` (use your local port)
+  - If `cloudflared` is running in Docker (as in this repo), `127.0.0.1` points to the container, not your Mac.
 
 ### 2) Create a Cloudflare Access app
 Cloudflare Zero Trust → **Access** → **Applications**:
@@ -40,6 +41,10 @@ Cloudflare Zero Trust → **Access** → **Applications**:
 - Add **two** policies:
   - Humans (browser UI): **Allow** (email / IdP group)
   - Jobs (API/service tokens): **Service Auth** (service token)
+
+Cloudflare Zero Trust → **Access** → **Service Auth**:
+- Create a service token (used by jobs or scripts)
+- Attach it to the **Service Auth** policy
 
 ### 3) Put the tunnel token in `.env`
 Cloudflare Zero Trust → **Networks** → **Tunnels** → your tunnel:
@@ -49,9 +54,16 @@ Then:
 ```bash
 cp compose/env.example .env
 # Set CLOUDFLARE_TUNNEL_TOKEN=...
+# Optional: keep PUBLIC_HOSTNAME + LOCAL_UPSTREAM_URL in sync with config/cloudflared.yml
 ```
 
-### 4) Start the tunnel
+### 4) Update `config/cloudflared.yml`
+- Set `hostname` to your public hostname (example: `mlflow.hyperchess.ai`)
+- Set `service` to your local upstream
+  - If your service runs on the host: `http://host.docker.internal:5050`
+  - If your service runs in Docker: use its container name on a shared network
+
+### 5) Start the tunnel
 ```bash
 docker compose up -d
 ```
@@ -59,3 +71,4 @@ docker compose up -d
 ## Files
 - `compose/docker-compose.yml` — runs cloudflared
 - `compose/env.example` — your token + settings
+- `config/cloudflared.yml` — hostname + upstream mapping
