@@ -2,9 +2,16 @@
 
 Template repo for exposing a local service (UI or API) through Cloudflare Tunnel + Access.
 
+## Why this exists (Hyperchess context)
+We run key services (MLflow, data viewers, local dashboards, even inference servers) on a laptop.
+This template makes them reachable at a stable Hyperchess subdomain without moving data to the cloud.
+It solves two problems:
+- **Stable URLs** for tools that need a permanent endpoint (e.g., `mlflow.hyperchess.ai`)
+- **Private access** without opening your laptop to the public internet
+
 ## What this does
 - runs `cloudflared` with a tunnel token
-- routes a public hostname to a local port
+- maps a public hostname to a local port
 - keeps access locked behind Cloudflare Access
 
 ## Quickstart
