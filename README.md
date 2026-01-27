@@ -30,14 +30,14 @@ A few other notes:
 Cloudflare Zero Trust → **Networks** → **Tunnels**:
 - Create a new tunnel (e.g., `local-mlflow`)
 - Add a **Public Hostname**:
-  - Hostname: `service.<your-domain>.com` (use the subdomain you want)
+  - Hostname: `<subdomain>.<your-domain>.com` (replace with your domain and desired subdomain)
   - Service type: **HTTP**
   - Service URL: `http://host.docker.internal:<port>` (use the local port your service listens on)
   - If `cloudflared` is running in Docker (as in this repo), `127.0.0.1` points to the container, not your Mac.
 
 ### 2) Create a Cloudflare Access app
 Cloudflare Zero Trust → **Access** → **Applications**:
-- Create a **Self-hosted** app for `service.<your-domain>.com`
+- Create a **Self-hosted** app for `<subdomain>.<your-domain>.com`
 - Add **two** policies:
   - Humans (browser UI): **Allow** (email / IdP group)
   - Jobs (API/service tokens): **Service Auth** (service token)
@@ -57,8 +57,9 @@ cp compose/env.example .env
 ```
 
 ### 4) Update `compose/cloudflared.yml`
-- Set `hostname` to your public hostname (example: `service.<your-domain>.com`)
+- Set `hostname` to your public hostname (example: `<subdomain>.<your-domain>.com`)
 - Replace `<your-domain>` with the domain you control in Cloudflare
+- Replace `<subdomain>` with the subdomain you want to expose
 - Set `service` to your local upstream
   - Replace `<port>` with the port your local service listens on
   - If your service runs on the host: `http://host.docker.internal:<port>`
