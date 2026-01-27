@@ -2,29 +2,27 @@
 
 Template repo for exposing a local service (UI or API) through Cloudflare Tunnel + Access.
 
-## Why this exists
-At Hyperchess, we tunnel a few key internal services to subdomains of https://hyperchess.ai by running and serving the entire stack from a single machine:
-- MLflow training observability (https://mlflow.hyperchess.ai)
-- Data viewers/dashboards (https://trainingdata.hyperchess.ai)
-- Inference servers that run on a local GPU.
-This lets us self-host the entire production stack locally (from a laptop!) and keep costs at $0 during development.
-It also keeps a clear path for transitioning individual microservices to cloud providers as-needed when we scale.
+This template provides a **starting point** (not a full setup) and instructions for making an arbitrary **self-hosted, Dockerized, RESTful service**
+available on a stable subdomain of your live Cloudflare-hosted website. This solves two main problems:
 
-This template provides a starting point and instructions for making an arbitrary REST server reachable at a stable Hyperchess subdomain. Update `config/cloudflared.yml` to point to your hostname + local service. This solves two problems:
-
+- Enables secure access to some local data without opening your entire machine to the public internet
 - Provides stable URLs for self-hosted tools that need a permanent HTTPS endpoint
-- Enables private access to local data without opening your laptop to the public internet
+
+## Why this exists
+At [Hyperchess](https://hyperchess.ai) ([GitHub](https://github.com/hyprchs/)), we tunnel a few key internal services to subdomains of https://hyperchess.ai:
+- MLflow training observability (https://mlflow.hyperchess.ai)
+- Viewers/dashboards for training data (https://trainingdata.hyperchess.ai)
+- Inference servers for chat completion requests, running on a local GPU! (https://api.hyperchess.ai)
+
+This lets us self-host our full microservice stack during development (from a laptop!), keeping cloud costs at $0,
+and progressively transition to cloud providers as-needed while we scale.
 
 A few other notes:
-- Subdomains will be protected by an auth check (current instructions only allow @hyperchess.ai emails to log in, but this can be adjusted)
-- Any paths on your local filesystem that are mounted to the local/self-hosted service's Docker container can be made available in the subdomain, essentially bypassing the need for S3-style cloud storage (at least for now)!
-- If your local container exposing the REST server isn't running, the live subdomain will simply be unavailable. That is, the setup is already secure, but if you're running from a laptop and want to be extra sure your machine isn't accessible, just stop the local container to break the tunnel.
-
-## What this does
-- runs `cloudflared` with a tunnel token
-- maps a public hostname to a local port
-- keeps hostname + upstream routing in `config/cloudflared.yml`
-- keeps access locked behind Cloudflare Access
+- Subdomains will be protected by an auth check (current instructions show how to allow only `@hyperchess.ai` emails to log in, but this can be adjusted for your setup)
+- Any paths that you mount to the local/self-hosted service's Docker container can be made available through the subdomain too (after auth; e.g. make your service display that data
+  in a [frontend](https://github.com/jacksonthall22/sveltekit-supabase) or allow it to be downloaded via an S3-like API), bypassing the need for cloud storage!
+- If your local container exposing the RESTful server isn't running, the live subdomain will simply be unavailable (giving a 503 error). That is, if you want to be extra sure
+  your machine isn't exposed (even though the recommended setup is already secure), just stop the local container to break the tunnel.
 
 ## Quickstart
 
