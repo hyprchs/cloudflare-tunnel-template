@@ -54,7 +54,6 @@ Then:
 ```bash
 cp compose/env.example .env
 # Set CLOUDFLARE_TUNNEL_TOKEN=...
-# Optional: keep PUBLIC_HOSTNAME + LOCAL_UPSTREAM_URL in sync with config/cloudflared.yml
 ```
 
 ### 4) Update `config/cloudflared.yml`
@@ -70,5 +69,5 @@ docker compose up -d
 
 ## Files
 - `compose/docker-compose.yml` — runs cloudflared
-- `compose/env.example` — your token + settings
+- `compose/env.example` — your token
 - `config/cloudflared.yml` — hostname + upstream mapping
