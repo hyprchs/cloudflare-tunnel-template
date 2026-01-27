@@ -13,7 +13,7 @@ It also keeps a clear path for transitioning individual microservices to cloud p
 This template provides a starting point and instructions for making an arbitrary REST server reachable at a stable Hyperchess subdomain. This solves two problems:
 
 - Provides stable URLs for tools that need a permanent endpoint (e.g., displaying local experiment tracking observability data as if it's cloud-hosted on https://mlflow.hyperchess.ai)
-- Private access to local data without opening your laptop to the public internet
+- Enables private access to local data without opening your laptop to the public internet
 
 A few other notes:
 - Subdomains will be protected by an auth check (current instructions only allow @hyperchess.ai emails to log in, but this can be adjusted)
