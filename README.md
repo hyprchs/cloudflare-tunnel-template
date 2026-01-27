@@ -59,7 +59,7 @@ cp compose/env.example .env
 ### 4) Update `compose/cloudflared.yml`
 - Set `hostname` to your public hostname (example: `mlflow.hyperchess.ai`)
 - Set `service` to your local upstream
-  - If your service runs on the host: `http://host.docker.internal:5050`
+  - If your service runs on the host: `http://host.docker.internal:PORT`
   - If your service runs in Docker: use its container name on a shared network
 
 ### 5) Start the tunnel
