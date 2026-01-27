@@ -53,7 +53,7 @@ Cloudflare Zero Trust → **Networks** → **Tunnels** → your tunnel:
 
 Then:
 ```bash
-cp compose/env.example .env
+cp .env.example .env
 # Set CLOUDFLARE_TUNNEL_TOKEN=...
 ```
 
