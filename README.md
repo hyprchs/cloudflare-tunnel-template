@@ -32,8 +32,7 @@ Cloudflare Zero Trust → **Networks** → **Tunnels**:
 - Add a **Public Hostname**:
   - Hostname: `<subdomain>.<your-domain>.com` (replace with your domain and desired subdomain)
   - Service type: **HTTP**
-  - Service URL: `http://host.docker.internal:<port>` (use the local port your service listens on)
-  - If `cloudflared` is running in Docker (as in this repo), `127.0.0.1` points to the container, not your Mac.
+  - Service URL: `http://<container-name>:<port>` (use the container name + port for your service)
   - Your domain must be on Cloudflare and using Cloudflare DNS (nameservers pointed at Cloudflare).
 
 ### 2) Create a Cloudflare Access app
@@ -63,8 +62,7 @@ cp .env.example .env
 - Replace `<subdomain>` with the subdomain you want to expose
 - Set `service` to your local upstream
   - Replace `<port>` with the port your local service listens on
-  - If your service runs on the host: `http://host.docker.internal:<port>`
-  - If your service runs in Docker: use its container name on a shared network
+  - Use your service's container name on the same Docker network (example: `http://mlflow:5000`)
 
 ### 5) Start the tunnel
 ```bash
