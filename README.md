@@ -3,11 +3,21 @@
 Template repo for exposing a local service (UI or API) through Cloudflare Tunnel + Access.
 
 ## Why this exists
-At Hyperchess, we run key services (MLflow, data viewers, local dashboards, even inference servers) on a laptop.
-This template makes them reachable at a stable Hyperchess subdomain without moving data to the cloud.
-It solves two problems:
-- **Stable URLs** for tools that need a permanent endpoint (e.g., `mlflow.hyperchess.ai`)
-- **Private access** without opening your laptop to the public internet
+At Hyperchess, we tunnel a few key internal services to subdomains of https://hyperchess.ai by running and serving the entire stack from a single machine:
+- MLflow training observability (https://mlflow.hyperchess.ai)
+- data viewers/dashboards (https://trainingdata.hyperchess.ai)
+- even inference servers that run on a local GPU.
+This allows us to self-host the entire production stack locally (from a laptop!) and keep costs at $0 during development, while also providing a clear path for transitioning individual microservices to cloud providers as-needed when we scale.
+
+This template provides a starting point and instructions for making an arbitrary REST server reachable at a stable Hyperchess subdomain. This solves two problems:
+
+- Provides stable URLs for tools that need a permanent endpoint (e.g., displaying local experiment tracking observability data as if it's cloud-hosted on https://mlflow.hyperchess.ai)
+- Private access without opening your laptop to the public internet
+
+A few other notes:
+- Subdomains will be protected by an auth check (current instructions only allow @hyperchess.ai emails to log in, but this can be adjusted)
+- Any paths on your local filesystem that are mounted to the local/self-hosted service's Docker container can be made available in the subdomain, essentially bypassing the need for S3-style cloud storage (at least for now)!
+- If your local container exposing the REST server isn't running, the live subdomain will simply be unavailable. That is, the setup is already secure, but if you're running from a laptop and want to be extra sure your machine isn't accessible, just stop the local container to break the tunnel.
 
 ## What this does
 - runs `cloudflared` with a tunnel token
@@ -49,8 +59,3 @@ docker compose up -d
 ## Files
 - `compose/docker-compose.yml` — runs cloudflared
 - `compose/env.example` — your token + settings
-
-## Possible use cases
-- Local MLflow UI with a stable URL (see [`mlflow-stack`](https://github.com/hyprchs/mlflow-stack))
-- A local FastAPI inference server for your CLM (chat/completions API)
-- A local dashboard for datasets or training metrics
