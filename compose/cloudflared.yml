@@ -1,4 +1,4 @@
 ingress:
   - hostname: <subdomain>.<your-domain>.com
-    service: http://host.docker.internal:<port>
+    service: http://<container-name>:<port>
   - service: http_status:404
