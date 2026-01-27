@@ -70,8 +70,3 @@ cp compose/env.example .env
 ```bash
 docker compose up -d
 ```
-
-## Files
-- `compose/docker-compose.yml` — runs cloudflared
-- `compose/env.example` — your token
-- `compose/cloudflared.yml` — hostname + upstream mapping
