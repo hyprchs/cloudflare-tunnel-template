@@ -34,6 +34,7 @@ Cloudflare Zero Trust → **Networks** → **Tunnels**:
   - Service type: **HTTP**
   - Service URL: `http://host.docker.internal:<port>` (use the local port your service listens on)
   - If `cloudflared` is running in Docker (as in this repo), `127.0.0.1` points to the container, not your Mac.
+  - Your domain must be on Cloudflare and using Cloudflare DNS (nameservers pointed at Cloudflare).
 
 ### 2) Create a Cloudflare Access app
 Cloudflare Zero Trust → **Access** → **Applications**:
