@@ -62,9 +62,22 @@ cp .env.example .env
 - Replace `<subdomain>` with the subdomain you want to expose
 - Set `service` to your local upstream
   - Replace `<port>` with the port your local service listens on
-  - Use your service's container name on the same Docker network (example: `http://mlflow:5000`)
+  - Replace `<container-name>` with your service's container name on the same Docker network (example: `http://mlflow:5000`)
 
 ### 5) Start the tunnel
 ```bash
 docker compose up -d
 ```
+
+### Optional: Run the example service
+If you want a working example service:
+- Set `service` in `compose/cloudflared.yml` to `http://example-api:8000`
+- Start both containers:
+  ```bash
+  docker compose -f compose/docker-compose.yml -f example/docker-compose.yml up -d --build
+  ```
+
+## Project structure
+- `compose/` — cloudflared config + compose file
+- `example/` — minimal FastAPI service + compose file
+- `src/` — placeholder for shared code
