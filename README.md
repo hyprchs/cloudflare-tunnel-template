@@ -30,14 +30,14 @@ A few other notes:
 Cloudflare Zero Trust → **Networks** → **Tunnels**:
 - Create a new tunnel (e.g., `local-mlflow`)
 - Add a **Public Hostname**:
-  - Hostname: `mlflow.<your-domain>` (example: `mlflow.hyperchess.ai`)
+  - Hostname: `service.<your-domain>.com` (use the subdomain you want)
   - Service type: **HTTP**
-  - Service URL: `http://host.docker.internal:5050` (use your local port)
+  - Service URL: `http://host.docker.internal:<port>` (use the local port your service listens on)
   - If `cloudflared` is running in Docker (as in this repo), `127.0.0.1` points to the container, not your Mac.
 
 ### 2) Create a Cloudflare Access app
 Cloudflare Zero Trust → **Access** → **Applications**:
-- Create a **Self-hosted** app for `mlflow.<your-domain>`
+- Create a **Self-hosted** app for `service.<your-domain>.com`
 - Add **two** policies:
   - Humans (browser UI): **Allow** (email / IdP group)
   - Jobs (API/service tokens): **Service Auth** (service token)
@@ -57,9 +57,11 @@ cp compose/env.example .env
 ```
 
 ### 4) Update `compose/cloudflared.yml`
-- Set `hostname` to your public hostname (example: `mlflow.hyperchess.ai`)
+- Set `hostname` to your public hostname (example: `service.<your-domain>.com`)
+- Replace `<your-domain>` with the domain you control in Cloudflare
 - Set `service` to your local upstream
-  - If your service runs on the host: `http://host.docker.internal:PORT`
+  - Replace `<port>` with the port your local service listens on
+  - If your service runs on the host: `http://host.docker.internal:<port>`
   - If your service runs in Docker: use its container name on a shared network
 
 ### 5) Start the tunnel
