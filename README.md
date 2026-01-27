@@ -2,8 +2,8 @@
 
 Template repo for exposing a local service (UI or API) through Cloudflare Tunnel + Access.
 
-## Why this exists (Hyperchess context)
-We run key services (MLflow, data viewers, local dashboards, even inference servers) on a laptop.
+## Why this exists
+At Hyperchess, we run key services (MLflow, data viewers, local dashboards, even inference servers) on a laptop.
 This template makes them reachable at a stable Hyperchess subdomain without moving data to the cloud.
 It solves two problems:
 - **Stable URLs** for tools that need a permanent endpoint (e.g., `mlflow.hyperchess.ai`)
@@ -15,9 +15,36 @@ It solves two problems:
 - keeps access locked behind Cloudflare Access
 
 ## Quickstart
-1) Create a Cloudflare Tunnel + Access app
-2) Put the tunnel token in `.env`
-3) Run `docker compose up -d`
+
+### 1) Create a Cloudflare Tunnel
+Cloudflare Zero Trust → **Networks** → **Tunnels**:
+- Create a new tunnel (e.g., `local-mlflow`)
+- Add a **Public Hostname**:
+  - Hostname: `mlflow.<your-domain>` (example: `mlflow.hyperchess.ai`)
+  - Service type: **HTTP**
+  - Service URL: `http://127.0.0.1:5050` (or your local port)
+
+### 2) Create a Cloudflare Access app
+Cloudflare Zero Trust → **Access** → **Applications**:
+- Create a **Self-hosted** app for `mlflow.<your-domain>`
+- Add **two** policies:
+  - Humans (browser UI): **Allow** (email / IdP group)
+  - Jobs (API/service tokens): **Service Auth** (service token)
+
+### 3) Put the tunnel token in `.env`
+Cloudflare Zero Trust → **Networks** → **Tunnels** → your tunnel:
+- Copy the **Tunnel token** (used by `cloudflared`)
+
+Then:
+```bash
+cp compose/env.example .env
+# Set CLOUDFLARE_TUNNEL_TOKEN=...
+```
+
+### 4) Start the tunnel
+```bash
+docker compose up -d
+```
 
 ## Files
 - `compose/docker-compose.yml` — runs cloudflared
