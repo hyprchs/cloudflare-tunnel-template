@@ -2,16 +2,16 @@
 
 Template repo for exposing a local service (UI or API) through Cloudflare Tunnel + Access.
 
-This template provides a **starting point** (not a full setup) and instructions for making an arbitrary **self-hosted, Dockerized, RESTful service**
+This template provides a **starting point** (not a full setup) and instructions for making an arbitrary **self-hosted, Dockerized service**
 available on a stable subdomain of your live Cloudflare-hosted website. This solves two main problems:
 
 - Enables secure access to some local data without opening your entire machine to the public internet
-- Provides stable URLs for self-hosted tools that need a permanent HTTPS endpoint
+- Provides stable URLs for tools that expect to be able to access your self-hosted services through permanent HTTPS endpoints
 
 ## Why this exists
 At [Hyperchess](https://hyperchess.ai) ([GitHub](https://github.com/hyprchs/)), we tunnel a few key internal services to subdomains of https://hyperchess.ai:
-- MLflow training observability (https://mlflow.hyperchess.ai)
 - Viewers/dashboards for training data (https://trainingdata.hyperchess.ai)
+- MLflow training observability (https://mlflow.hyperchess.ai)
 - Inference servers for chat completion requests, running on a local GPU! (https://api.hyperchess.ai)
 
 This lets us self-host our full microservice stack during development (from a laptop!), keeping cloud costs at $0,
@@ -19,9 +19,9 @@ and progressively transition to cloud providers as-needed while we scale.
 
 A few other notes:
 - Subdomains will be protected by an auth check (current instructions show how to allow only `@hyperchess.ai` emails to log in, but this can be adjusted for your setup)
-- Any paths that you mount to the local/self-hosted service's Docker container can be made available through the subdomain too (after auth; e.g. make your service display that data
-  in a [frontend](https://github.com/jacksonthall22/sveltekit-supabase) or allow it to be downloaded via an S3-like API), bypassing the need for cloud storage!
-- If your local container exposing the RESTful server isn't running, the live subdomain will simply be unavailable (giving a 503 error). That is, if you want to be extra sure
+- Any paths that you mount to the local/self-hosted service's Docker container can be made available on the subdomain too (after auth; e.g. make your service read & display that data
+  in a [frontend](https://github.com/jacksonthall22/sveltekit-supabase), or allow it to be downloaded via an S3-like API), bypassing the need for cloud storage!
+- If your local container exposing the service isn't running, the live subdomain will simply be unavailable (giving a 503 error). That is, if you want to be extra sure
   your machine isn't exposed (even though the recommended setup is already secure), just stop the local container to break the tunnel.
 
 ## Quickstart
