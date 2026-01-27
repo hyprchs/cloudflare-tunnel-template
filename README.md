@@ -6,7 +6,7 @@ Template repo for exposing a local service (UI or API) through Cloudflare Tunnel
 At Hyperchess, we tunnel a few key internal services to subdomains of https://hyperchess.ai by running and serving the entire stack from a single machine:
 - MLflow training observability (https://mlflow.hyperchess.ai)
 - Data viewers/dashboards (https://trainingdata.hyperchess.ai)
-- even inference servers that run on a local GPU.
+- Even inference servers that run on a local GPU.
 This lets us self-host the entire production stack locally (from a laptop!) and keep costs at $0 during development.
 It also keeps a clear path for transitioning individual microservices to cloud providers as-needed when we scale.
 
