@@ -111,11 +111,11 @@ b.
   - Click **Save**
 
 ### 5) Bring your own Dockerized service
-- Edit `src/docker-compose.yml` by adding your service under `services:`. Choose whatever name you like for the service, e.g. `my-service` (you'll use this in the next step).
+- Edit `src/docker-compose.yml` by adding your service under **`services:`**. Choose whatever name you like for the service, e.g. `my-service` (you'll use this in the next step).
   Use one of these two patterns:
   - Build from a local Dockerfile:
-    - Put a `Dockerfile` in a folder (for example `./my-service/`)
-    - Add this to `src/docker-compose.yml`:
+    - Put a `Dockerfile` in a folder, e.g. under `./my-service/`
+    - Add this to **`src/docker-compose.yml`**:
       ```yaml
       services:
         cloudflared:
@@ -125,7 +125,7 @@ b.
             context: ./my-service
       ```
   - Use a prebuilt image:
-    - Add this to `src/docker-compose.yml`:
+    - Add this to **`src/docker-compose.yml`**:
       ```yaml
       services:
         cloudflared:
@@ -133,12 +133,13 @@ b.
         my-service:
           image: my-org/my-image:latest
       ```
-- Update `src/cloudflared.yml`:
-  - Replace `<subdomain>` and `<your-domain>` in the `hostname` line to your own values
-  - Replace `<container-name>` with the service name you chose earlier, e.g. `my-service`
-  - Replace `<port>` with the port your local service's container listens on. For example, you might start your service with `--port 8000`, or the port may be defined right in the code. Your Dockerfile might also have `EXPOSE 8000` (note: `EXPOSE` is helpful but not required to set in your Dockerfile).
+- Update **`src/cloudflared.yml`**:
+  - Replace **`<subdomain>`** and **`<your-domain>`** in the **`hostname`** line to your own values
+  - Replace **`<container-name>`** with the service name you chose earlier, e.g. `my-service`
+  - Replace **`<port>`** with the port your service's container listens on. For example, you might start your service with `--port 8000`; the port may be defined elsewhere in the code that your container runs; or your Dockerfile might have `EXPOSE 8000` (note: `EXPOSE` is helpful but not required to set in your Dockerfile).
 
 ### 6) Start the tunnel
 ```bash
-docker compose -f src/docker-compose.yml up -d
+cd src
+docker compose up -d
 ```
