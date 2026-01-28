@@ -101,9 +101,8 @@ b.
     - Turn on **Accept all available identity providers**. You should see **One-time PIN** availabe in the list below.
   - Click **Next**
   - Optional: Under **Application Appearance**, select **Use custom logo** and provide link to your website's favicon!
-  - TODO: recommend good **Cross-Origin Resource Sharing (CORS) settings**
-  - TODO: recommend good **Cookie settings**
-  - TODO: recommend good **401 Response for Service Auth policies**
+  - Leave **CORS settings** and **Cookie settings** at their defaults unless you know you need something specific.
+  - Turn on **Return 401 Response for Service Auth policies** (so API clients get a 401 instead of a login page).
   - Click **Save**
 
 ### 5) Update `src/cloudflared.yml`
