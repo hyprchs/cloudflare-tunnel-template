@@ -4,8 +4,8 @@ Template repo for exposing a local service (UI or API) through Cloudflare Tunnel
 
 ### Project structure
 ```
-├╴`src/`     — template cloudflared config + compose file
-└╴`example/` — standalone example implementation of the template
+├╴src/     — template cloudflared config + compose file
+└╴example/ — standalone example implementation of the template
 ```
 
 This template provides a **starting point** and instructions for making an arbitrary **self-hosted, Dockerized service**
