@@ -8,7 +8,7 @@ Template repo for exposing a local service (UI or API) through Cloudflare Tunnel
 └╴`example/` — standalone example implementation of the template
 ```
 
-This template provides a **starting point** (not a full setup) and instructions for making an arbitrary **self-hosted, Dockerized service**
+This template provides a **starting point** and instructions for making an arbitrary **self-hosted, Dockerized service**
 available on a stable subdomain of your live Cloudflare-hosted website. This solves two main problems:
 
 - Enables secure access to some local data without opening your entire machine to the public internet
