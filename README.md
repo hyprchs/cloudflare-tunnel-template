@@ -121,7 +121,10 @@ b.
       my-service:
         image: my-org/my-image:latest
       ```
-- Pick a container name and port for your service (you'll use these in the next step)
+- Pick a container name for your service (you'll use it in the next step)
+- Find the port your service listens on (this is set inside your service's Dockerfile/app code)
+  - Example: if your service starts with `--port 8000`, the port is `8000`
+  - You can change the port, but only by changing your service's Dockerfile/app code
 - Update `src/cloudflared.yml`:
   - Set `hostname` to your public hostname (example: `<subdomain>.<your-domain>.com`)
   - Replace `<your-domain>` with your Cloudflare-managed domain
