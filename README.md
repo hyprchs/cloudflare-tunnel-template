@@ -11,7 +11,7 @@ available on a stable subdomain of your live Cloudflare-hosted website. This sol
 ## Why this exists
 At [Hyperchess](https://hyperchess.ai) ([GitHub](https://github.com/hyprchs/)), we tunnel a few key internal services to subdomains of https://hyperchess.ai:
 - Viewers/dashboards for training data (https://trainingdata.hyperchess.ai)
-- MLflow training observability (https://mlflow.hyperchess.ai)
+- MLflow for training observability (https://mlflow.hyperchess.ai)
 - Inference servers for chat completion requests, running on a local GPU! (https://api.hyperchess.ai)
 
 This lets us self-host our full microservice stack during development (from a laptop!), keeping cloud costs at $0,
