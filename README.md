@@ -8,6 +8,10 @@ available on a stable subdomain of your live Cloudflare-hosted website. This sol
 - Enables secure access to some local data without opening your entire machine to the public internet
 - Provides stable URLs for tools that expect to be able to access your self-hosted services through permanent HTTPS endpoints
 
+## Project structure
+- `src/` — template `cloudflared` config + compose file
+- `example/` — standalone example implementation
+
 ## Why this exists
 At [Hyperchess](https://hyperchess.ai) ([GitHub](https://github.com/hyprchs/)), we tunnel a few key internal services to subdomains of https://hyperchess.ai:
 - Viewers/dashboards for training data (https://trainingdata.hyperchess.ai)
@@ -105,38 +109,34 @@ b.
   - Click **Save**
 
 ### 5) Bring your own Dockerized service
-- Open `src/docker-compose.yml` and add your service under `services:`
-- Use one of these two patterns:
+- Edit `src/docker-compose.yml` by adding your service under `services:`. Choose whatever name you like for the service (you'll use it in the next step).
+  Use one of these two patterns:
   - Build from a local Dockerfile:
     - Put a `Dockerfile` in a folder (for example `./my-service/`)
     - Add this to `src/docker-compose.yml`:
       ```yaml
-      my-service:
-        build:
-          context: ./my-service
+      services:
+        cloudflared:
+          ...
+        my-service:
+          build:
+            context: ./my-service
       ```
   - Use a prebuilt image:
     - Add this to `src/docker-compose.yml`:
       ```yaml
-      my-service:
-        image: my-org/my-image:latest
+      services:
+        cloudflared:
+          ...
+        my-service:
+          image: my-org/my-image:latest
       ```
-- Pick a container name for your service (this is the service name you add under `services:` in `src/docker-compose.yml`)
-- Find the port your service listens on (this is set inside your service's Dockerfile/app code). For example, your app might start with `--port 8000`, or your Dockerfile might have `EXPOSE 8000` (note: `EXPOSE` is helpful but not required).
-- You can change the port, but only by changing your service's Dockerfile/app code
 - Update `src/cloudflared.yml`:
-  - Set `hostname` to your public hostname (example: `<subdomain>.<your-domain>.com`)
-  - Replace `<your-domain>` with your Cloudflare-managed domain
-  - Replace `<subdomain>` with the subdomain you want to expose
-  - Set `service` to your local Dockerized service
-    - Replace `<port>` with the port your local service's container listens on
-    - Replace `<container-name>` with your local service's name on the same Docker network (e.g. `http://example-api:8000`)
+  - Replace `<subdomain>` and `<your-domain>` in the `hostname` line to your own values
+  - Replace `<container-name>` with the service name you chose earlier, e.g. `my-service`
+  - Replace `<port>` with the port your local service's container listens on. For example, you might start your service with `--port 8000`, or the port may be defined right in the code. Your Dockerfile might also have `EXPOSE 8000` (note: `EXPOSE` is helpful but not required to set in your Dockerfile).
 
 ### 6) Start the tunnel
 ```bash
 docker compose -f src/docker-compose.yml up -d
 ```
-
-## Project structure
-- `src/` — template cloudflared config + compose file
-- `example/` — standalone FastAPI example (with its own README)
