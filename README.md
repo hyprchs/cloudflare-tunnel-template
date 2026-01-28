@@ -28,92 +28,147 @@ A few other notes:
 Note: These instructions were tested on Mac only.
 
 ### 1) Create a Cloudflare Tunnel
-a. Go to **Cloudflare Zero Trust**, then go to **Networks** → **Connectors** → **Create a tunnel** → **Select Cloudflared**
-
-b. Set a **Tunnel name**, e.g. `my-tunnel`, and click **Save tunnel**
-
-c. Choose your environment (OS), **Mac**
-
-d. If you do not already have `cloudflared` installed (check with `which cloudflared`), now is a good time to run `brew install cloudflared` as this page recommends
-
-e. Copy one of the code blocks to get the tunnel token. It isn't shown in full on this page, but you can paste the result somewhere, then copy the full token part.
-   Create `.env` from `.env.example`:
-   ```bash
-   cp .env.example .env
-   ```
-   and paste in the token: `CLOUDFLARE_TUNNEL_TOKEN=<token>`. Back in Cloudflare, click **Next**.
-
-f.
-  - Under **Hostname**:
-    - Set a value for **Subdomain**, e.g. `myservice`
-    - Select your domain from the **Domain** dropdown, e.g. `<your-domain>.com`. Note: Your domain must be on Cloudflare and using Cloudflare DNS (nameservers pointed at Cloudflare), or the subdomain set in this step will not resolve correctly.
-  - Under **Service**:
-    - Select **Type**: `HTTP`
-    - Set **URL**: `<container-name>:<port>`, e.g. `example-api:8000`. Here, `container-name` should be the name of your Docker service (which you'll need to set in `src/docker-compose.yml` next to the existing `cloudflared` service), and `port` should be the port that your service's container listens on. See [example/](example/) for a minimal example setup.
-  - Click **Complete setup**
+<ol type="a">
+  <li>Go to <strong>Cloudflare Zero Trust</strong>, then go to <strong>Networks</strong> → <strong>Connectors</strong> → <strong>Create a tunnel</strong> → <strong>Select Cloudflared</strong></li>
+  <li>Set a <strong>Tunnel name</strong>, e.g. <code>my-tunnel</code>, and click <strong>Save tunnel</strong></li>
+  <li>Choose your environment (OS), <strong>Mac</strong></li>
+  <li>If you do not already have <code>cloudflared</code> installed (check with <code>which cloudflared</code>), now is a good time to run <code>brew install cloudflared</code> as this page recommends</li>
+  <li>
+    Copy one of the code blocks to get the tunnel token. It isn't shown in full on this page, but you can paste the result somewhere, then copy the full token part.
+    Create <code>.env</code> from <code>.env.example</code>:
+    <pre><code>cp .env.example .env</code></pre>
+    and paste in the token: <code>CLOUDFLARE_TUNNEL_TOKEN=&lt;token&gt;</code>. Back in Cloudflare, click <strong>Next</strong>.
+  </li>
+  <li>
+    Under <strong>Hostname</strong>:
+    <ul>
+      <li>Set a value for <strong>Subdomain</strong>, e.g. <code>myservice</code></li>
+      <li>Select your domain from the <strong>Domain</strong> dropdown, e.g. <code>&lt;your-domain&gt;.com</code>. Note: Your domain must be on Cloudflare and using Cloudflare DNS (nameservers pointed at Cloudflare), or the subdomain set in this step will not resolve correctly.</li>
+    </ul>
+    Under <strong>Service</strong>:
+    <ul>
+      <li>Select <strong>Type</strong>: <code>HTTP</code></li>
+      <li>Set <strong>URL</strong>: <code>&lt;container-name&gt;:&lt;port&gt;</code>, e.g. <code>example-api:8000</code>. Here, <code>container-name</code> should be the name of your Docker service (which you'll need to set in <code>src/docker-compose.yml</code> next to the existing <code>cloudflared</code> service), and <code>port</code> should be the port that your service's container listens on. See <a href="example/">example/</a> for a minimal example setup.</li>
+    </ul>
+    Click <strong>Complete setup</strong>
+  </li>
+</ol>
 
 ### 2) Create a Service Token
-a. While still in **Cloudflare Zero Trust**, go to **Access controls** → **Service credentials** → **Create Service Token**
-
-b.
-  - Set a **Service token name**, e.g. `my-service-token`
-  - Select a **Service Token Duration**: `Non-expiring`
-  - Click **Generate token**
-  - Copy/save your **Header and client secret** for later, it's only available once on this screen.
+<ol type="a">
+  <li>While still in <strong>Cloudflare Zero Trust</strong>, go to <strong>Access controls</strong> → <strong>Service credentials</strong> → <strong>Create Service Token</strong></li>
+  <li>
+    <ul>
+      <li>Set a <strong>Service token name</strong>, e.g. <code>my-service-token</code></li>
+      <li>Select a <strong>Service Token Duration</strong>: <code>Non-expiring</code></li>
+      <li>Click <strong>Generate token</strong></li>
+      <li>Copy/save your <strong>Header and client secret</strong> for later, it's only available once on this screen.</li>
+    </ul>
+  </li>
+</ol>
 
 ### 3) Enable One-time PIN identity provider
-While still in **Cloudflare Zero Trust**, go to **Integrations** → **Identity providers** → **Add an identity provider** → **One-time PIN**; it should show **Added**.
+<ol>
+  <li>While still in <strong>Cloudflare Zero Trust</strong>, go to <strong>Integrations</strong> → <strong>Identity providers</strong> → <strong>Add an identity provider</strong> → <strong>One-time PIN</strong>; it should show <strong>Added</strong>.</li>
+</ol>
 
 ### 4) Create a Cloudflare Access app
-a. While still in **Cloudflare Zero Trust**, go to **Access controls** → **Applications** → **Add an application** → **Select Self-hosted**
-
-b.
-  - Under **Basic information**:
-    - Set an **Application name**, e.g. `my-application`
-    - Select a **Session Duration** that works for you, e.g. `24 hours`. This sets the auth session duration for when visiting `myservice.<your-domain>.com`, after which you'll need to sign in again.
-    - Click **Add public hostname**, then set values under it:
-      - Select **Input method**: `Default`
-      - Set **Subdomain** to the same value as before, e.g. `myservice`
-      - Set **Domain** to the same value as before, e.g. `<your-domain>.com`
-  - Under **Access policies**, we'll create two new policies:
-    - Policy 1:
-      - Click **Create new policy**. This will open a new tab.
-      - Under **Basic Information**:
-        - Set **Policy name**: `Humans/browser`
-        - Select **Action**: `Allow`
-        - Select **Session duration**: `Same as application session timeout`
-      - Under **Add rules** → **Include (OR)**:
-        - Define who you want to be able to get through the auth guard at your service in the browser. For example, select **Selector**: `Emails`, and enter specific emails in **Value**, or select **Selector**: `Emails ending in` with **Value**: `@<your-company>.com`.
-      - Click **Save** and go back to the previous tab
-      - Click **Select existing policies** and choose the policy you just created
-    - Policy 2:
-      - Click **Create new policy**. This will open a new tab.
-      - Under **Basic Information**:
-        - Set **Policy name**: `Jobs/non-interactive`
-        - Select **Action**: `Service Auth`
-        - Select **Session duration**: `No duration, expires immediately`
-      - Under **Add rules** → **Include (OR)**:
-        - Select **Selector**: `Service Token`
-        - Select **Value** as the token name you created earlier, e.g. `my-service-token`
-      - Click **Save** and go back to the previous tab
-      - Click **Select existing policies** and choose the policy you just created
-  - Under **Login methods**:
-    - Turn on **Accept all available identity providers**. You should see **One-time PIN** availabe in the list below.
-  - Click **Next**
-  - Optional: Under **Application Appearance**, select **Use custom logo** and provide link to your website's favicon!
-  - TODO: recommend good **Cross-Origin Resource Sharing (CORS) settings**
-  - TODO: recommend good **Cookie settings**
-  - TODO: recommend good **401 Response for Service Auth policies**
-  - Click **Save**
+<ol type="a">
+  <li>While still in <strong>Cloudflare Zero Trust</strong>, go to <strong>Access controls</strong> → <strong>Applications</strong> → <strong>Add an application</strong> → <strong>Select Self-hosted</strong></li>
+  <li>
+    Under <strong>Basic information</strong>:
+    <ul>
+      <li>Set an <strong>Application name</strong>, e.g. <code>my-application</code></li>
+      <li>Select a <strong>Session Duration</strong> that works for you, e.g. <code>24 hours</code>. This sets the auth session duration for when visiting <code>myservice.&lt;your-domain&gt;.com</code>, after which you'll need to sign in again.</li>
+      <li>Click <strong>Add public hostname</strong>, then set values under it:</li>
+      <li>
+        <ul>
+          <li>Select <strong>Input method</strong>: <code>Default</code></li>
+          <li>Set <strong>Subdomain</strong> to the same value as before, e.g. <code>myservice</code></li>
+          <li>Set <strong>Domain</strong> to the same value as before, e.g. <code>&lt;your-domain&gt;.com</code></li>
+        </ul>
+      </li>
+    </ul>
+    Under <strong>Access policies</strong>, we'll create two new policies:
+    <ul>
+      <li>Policy 1:</li>
+      <li>
+        <ul>
+          <li>Click <strong>Create new policy</strong>. This will open a new tab.</li>
+          <li>Under <strong>Basic Information</strong>:</li>
+          <li>
+            <ul>
+              <li>Set <strong>Policy name</strong>: <code>Humans/browser</code></li>
+              <li>Select <strong>Action</strong>: <code>Allow</code></li>
+              <li>Select <strong>Session duration</strong>: <code>Same as application session timeout</code></li>
+            </ul>
+          </li>
+          <li>Under <strong>Add rules</strong> → <strong>Include (OR)</strong>:</li>
+          <li>
+            <ul>
+              <li>Define who you want to be able to get through the auth guard at your service in the browser. For example, select <strong>Selector</strong>: <code>Emails</code>, and enter specific emails in <strong>Value</strong>, or select <strong>Selector</strong>: <code>Emails ending in</code> with <strong>Value</strong>: <code>@&lt;your-company&gt;.com</code>.</li>
+            </ul>
+          </li>
+          <li>Click <strong>Save</strong> and go back to the previous tab</li>
+          <li>Click <strong>Select existing policies</strong> and choose the policy you just created</li>
+        </ul>
+      </li>
+      <li>Policy 2:</li>
+      <li>
+        <ul>
+          <li>Click <strong>Create new policy</strong>. This will open a new tab.</li>
+          <li>Under <strong>Basic Information</strong>:</li>
+          <li>
+            <ul>
+              <li>Set <strong>Policy name</strong>: <code>Jobs/non-interactive</code></li>
+              <li>Select <strong>Action</strong>: <code>Service Auth</code></li>
+              <li>Select <strong>Session duration</strong>: <code>No duration, expires immediately</code></li>
+            </ul>
+          </li>
+          <li>Under <strong>Add rules</strong> → <strong>Include (OR)</strong>:</li>
+          <li>
+            <ul>
+              <li>Select <strong>Selector</strong>: <code>Service Token</code></li>
+              <li>Select <strong>Value</strong> as the token name you created earlier, e.g. <code>my-service-token</code></li>
+            </ul>
+          </li>
+          <li>Click <strong>Save</strong> and go back to the previous tab</li>
+          <li>Click <strong>Select existing policies</strong> and choose the policy you just created</li>
+        </ul>
+      </li>
+    </ul>
+    Under <strong>Login methods</strong>:
+    <ul>
+      <li>Turn on <strong>Accept all available identity providers</strong>. You should see <strong>One-time PIN</strong> availabe in the list below.</li>
+    </ul>
+    Click <strong>Next</strong>
+    <br />
+    Optional: Under <strong>Application Appearance</strong>, select <strong>Use custom logo</strong> and provide link to your website's favicon!
+    <br />
+    TODO: recommend good <strong>Cross-Origin Resource Sharing (CORS) settings</strong>
+    <br />
+    TODO: recommend good <strong>Cookie settings</strong>
+    <br />
+    TODO: recommend good <strong>401 Response for Service Auth policies</strong>
+    <br />
+    Click <strong>Save</strong>
+  </li>
+</ol>
 
 ### 5) Update `src/cloudflared.yml`
-- Set `hostname` to your public hostname (example: `<subdomain>.<your-domain>.com`)
-- Replace `<your-domain>` with your Cloudflare-managed domain
-- Replace `<subdomain>` with the subdomain you want to expose
-- Set `service` to your local Dockerized service
-  - Replace `<port>` with the port your local service's container listens on
-  - Replace `<container-name>` with your local service's name on the same Docker network (e.g. `http://example-api:8000`)
-- TODO: Simplify/edit instructions above to read more similarly to previous steps (check against `src/cloudflared.yml` to be sure these instructions are still accurate and minimal)
+<ul>
+  <li>Set <code>hostname</code> to your public hostname (example: <code>&lt;subdomain&gt;.&lt;your-domain&gt;.com</code>)</li>
+  <li>Replace <code>&lt;your-domain&gt;</code> with your Cloudflare-managed domain</li>
+  <li>Replace <code>&lt;subdomain&gt;</code> with the subdomain you want to expose</li>
+  <li>Set <code>service</code> to your local Dockerized service</li>
+  <li>
+    <ul>
+      <li>Replace <code>&lt;port&gt;</code> with the port your local service's container listens on</li>
+      <li>Replace <code>&lt;container-name&gt;</code> with your local service's name on the same Docker network (e.g. <code>http://example-api:8000</code>)</li>
+    </ul>
+  </li>
+  <li>TODO: Simplify/edit instructions above to read more similarly to previous steps (check against <code>src/cloudflared.yml</code> to be sure these instructions are still accurate and minimal)</li>
+</ul>
 
 ### 6) Start the tunnel
 ```bash
