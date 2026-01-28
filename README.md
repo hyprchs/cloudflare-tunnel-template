@@ -2,15 +2,17 @@
 
 Template repo for exposing a local service (UI or API) through Cloudflare Tunnel + Access.
 
+### Project structure
+```
+├╴`src/`     — template cloudflared config + compose file
+└╴`example/` — standalone example implementation of the template
+```
+
 This template provides a **starting point** (not a full setup) and instructions for making an arbitrary **self-hosted, Dockerized service**
 available on a stable subdomain of your live Cloudflare-hosted website. This solves two main problems:
 
 - Enables secure access to some local data without opening your entire machine to the public internet
 - Provides stable URLs for tools that expect to be able to access your self-hosted services through permanent HTTPS endpoints
-
-## Project structure
-- `src/` — template `cloudflared` config + compose file
-- `example/` — standalone example implementation
 
 ## Why this exists
 At [Hyperchess](https://hyperchess.ai) ([GitHub](https://github.com/hyprchs/)), we tunnel a few key internal services to subdomains of https://hyperchess.ai:
