@@ -105,7 +105,22 @@ b.
   - Click **Save**
 
 ### 5) Bring your own Dockerized service
-- Add your service to `src/docker-compose.yml` (either `build` a Dockerfile or use an `image`)
+- Open `src/docker-compose.yml` and add your service under `services:`
+- Use one of these two patterns:
+  - Build from a local Dockerfile:
+    - Put a `Dockerfile` in a folder (for example `./my-service/`)
+    - Add this to `src/docker-compose.yml`:
+      ```yaml
+      my-service:
+        build:
+          context: ./my-service
+      ```
+  - Use a prebuilt image:
+    - Add this to `src/docker-compose.yml`:
+      ```yaml
+      my-service:
+        image: my-org/my-image:latest
+      ```
 - Pick a container name and port for your service (you'll use these in the next step)
 - Update `src/cloudflared.yml`:
   - Set `hostname` to your public hostname (example: `<subdomain>.<your-domain>.com`)
