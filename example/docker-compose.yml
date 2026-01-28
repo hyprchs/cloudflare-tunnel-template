@@ -1,4 +1,11 @@
 services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --config /etc/cloudflared/config.yml --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN:?set CLOUDFLARE_TUNNEL_TOKEN}
+    volumes:
+      - ./cloudflared.yml:/etc/cloudflared/config.yml:ro
+
   example-api:
     build:
-      context: ./example
+      context: .

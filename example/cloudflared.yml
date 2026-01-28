@@ -1,0 +1,4 @@
+ingress:
+  - hostname: example.<your-domain>.com
+    service: http://example-api:8000
+  - service: http_status:404
