@@ -109,7 +109,7 @@ b.
   - Click **Save**
 
 ### 5) Bring your own Dockerized service
-- Edit `src/docker-compose.yml` by adding your service under `services:`. Choose whatever name you like for the service (you'll use it in the next step).
+- Edit `src/docker-compose.yml` by adding your service under `services:`. Choose whatever name you like for the service, e.g. `my-service` (you'll use this in the next step).
   Use one of these two patterns:
   - Build from a local Dockerfile:
     - Put a `Dockerfile` in a folder (for example `./my-service/`)
