@@ -104,14 +104,16 @@ b.
   - Under **401 Response for Service Auth policies**, turn on **Return 401 response**. This makes it so unauthenticated API clients get a 401 instead of a login page.
   - Click **Save**
 
-### 5) Update `src/cloudflared.yml`
-- Set `hostname` to your public hostname (example: `<subdomain>.<your-domain>.com`)
-- Replace `<your-domain>` with your Cloudflare-managed domain
-- Replace `<subdomain>` with the subdomain you want to expose
-- Set `service` to your local Dockerized service
-  - Replace `<port>` with the port your local service's container listens on
-  - Replace `<container-name>` with your local service's name on the same Docker network (e.g. `http://example-api:8000`)
-- TODO: Simplify/edit instructions above to read more similarly to previous steps (check against `src/cloudflared.yml` to be sure these instructions are still accurate and minimal)
+### 5) Bring your own Dockerized service
+- Add your service to `src/docker-compose.yml` (either `build` a Dockerfile or use an `image`)
+- Pick a container name and port for your service (you'll use these in the next step)
+- Update `src/cloudflared.yml`:
+  - Set `hostname` to your public hostname (example: `<subdomain>.<your-domain>.com`)
+  - Replace `<your-domain>` with your Cloudflare-managed domain
+  - Replace `<subdomain>` with the subdomain you want to expose
+  - Set `service` to your local Dockerized service
+    - Replace `<port>` with the port your local service's container listens on
+    - Replace `<container-name>` with your local service's name on the same Docker network (e.g. `http://example-api:8000`)
 
 ### 6) Start the tunnel
 ```bash
