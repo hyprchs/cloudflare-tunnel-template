@@ -80,6 +80,7 @@ b.
     - Turn on **Accept all available identity providers**. You should see **One-time PIN** availabe in the list below.
   - Click **Next**
   - Optional: Under **Application Appearance**, select **Use custom logo** and provide link to your website's favicon!
+  - Under **401 Response for Service Auth policies**, turn on **Return 401 response**. This makes it so unauthenticated API clients get a 401 instead of a login page.
   - Click **Save**
 
 ### 5) Update `cloudflared.yml`
