@@ -112,7 +112,7 @@ fi
 if [ -z "$TUNNEL_TOKEN" ]; then
   token_resp="$(cf_api GET "/accounts/${CLOUDFLARE_ACCOUNT_ID}/cfd_tunnel/${TUNNEL_ID}/token")"
   ensure_success "$token_resp"
-  TUNNEL_TOKEN="$(echo "$token_resp" | jq -r '.result.token // .result // empty')"
+  TUNNEL_TOKEN="$(echo "$token_resp" | jq -r '(.result | if type=="object" then .token else . end) // empty')"
 fi
 
 if [ -z "$TUNNEL_TOKEN" ]; then
@@ -171,8 +171,15 @@ dns_payload="$(jq -n \
 
 dns_resp="$(cf_api POST "/zones/${CLOUDFLARE_ZONE_ID}/dns_records" "$dns_payload")"
 if ! echo "$dns_resp" | jq -e '.success == true' >/dev/null 2>&1; then
-  echo "DNS record creation failed (it may already exist). Response:" >&2
-  echo "$dns_resp" | jq '.' >&2 || echo "$dns_resp" >&2
+  dns_error_code="$(echo "$dns_resp" | jq -r '.errors[0].code // empty')"
+  if [ "$dns_error_code" = "81053" ]; then
+    echo "DNS record already exists for ${APP_FQDN}; skipping."
+  else
+    echo "DNS record creation failed. Response:" >&2
+    echo "$dns_resp" | jq '.' >&2 || echo "$dns_resp" >&2
+  fi
+else
+  echo "DNS record created for ${APP_FQDN}."
 fi
 
 echo "==> Step 2: Create service token"
