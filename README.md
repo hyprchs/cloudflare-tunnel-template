@@ -49,6 +49,8 @@ write `.env` file with your tunnel token, and writes an `.env.example` file.
 
   <img width="875" height="211" alt="image" src="https://github.com/user-attachments/assets/341d61e8-1b9b-4322-b7f0-f612019ec85b" />
 
+  Optional: Choose **TTL End Date** to be short-lived, e.g. one day in the future (you'll only need this key once for running the setup script).
+
 - Find your Cloudflare **Account ID** and **Zone ID**: [docs](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/)
 
 - Export env vars, filling in your values:
