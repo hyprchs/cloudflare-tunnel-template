@@ -2,72 +2,11 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-# TODO: 1) Create a Cloudflare Tunnel
-# TODO: a. Go to **Cloudflare Zero Trust**, then go to **Networks** -> **Connectors** -> **Create a tunnel** -> **Select Cloudflared**
-# TODO: b. Set a **Tunnel name**, e.g. `my-tunnel`, and click **Save tunnel**
-# TODO: c. Choose your environment (OS), **Mac**
-# TODO: d. If you do not already have `cloudflared` installed (check with `which cloudflared`), now is a good time to run `brew install cloudflared` as this page recommends
-# TODO: e. Copy one of the code blocks to get the tunnel token. It isn't shown in full on this page, but you can paste the result somewhere, then copy the full token part.
-# TODO:    Create `.env` from `.env.example`:
-# TODO:    ```bash
-# TODO:    cp .env.example .env
-# TODO:    ```
-# TODO:    and paste in the token: `CLOUDFLARE_TUNNEL_TOKEN=<token>`. Back in Cloudflare, click **Next**.
-# TODO: f.
-# TODO:   - Under **Hostname**:
-# TODO:     - Set a value for **Subdomain**, e.g. `myservice`
-# TODO:     - Select your domain from the **Domain** dropdown, e.g. `<your-domain>.com`. Note: Your domain must be on Cloudflare and using Cloudflare DNS (nameservers pointed at Cloudflare), or the subdomain set in this step will not resolve correctly.
-# TODO:   - Under **Service**:
-# TODO:     - Select **Type**: `HTTP`
-# TODO:     - Set **URL**: `<container-name>:<port>`, e.g. `example-api:8000`. Here, `container-name` should be the name of your Docker service (which you'll need to set in `src/docker-compose.yml` next to the existing `cloudflared` service), and `port` should be the port that your service's container listens on. See [example/](example/) for a minimal example setup.
-# TODO:   - Click **Complete setup**
-# TODO: 2) Create a Service Token
-# TODO: a. While still in **Cloudflare Zero Trust**, go to **Access controls** -> **Service credentials** -> **Create Service Token**
-# TODO: b.
-# TODO:   - Set a **Service token name**, e.g. `my-service-token`
-# TODO:   - Select a **Service Token Duration**: `Non-expiring`
-# TODO:   - Click **Generate token**
-# TODO:   - Copy/save your **Header and client secret** for later, it's only available once on this screen.
-# TODO: 3) Enable One-time PIN identity provider
-# TODO: While still in **Cloudflare Zero Trust**, go to **Integrations** -> **Identity providers** -> **Add an identity provider** -> **One-time PIN**; it should show **Added**.
-# TODO: 4) Create a Cloudflare Access app
-# TODO: a. While still in **Cloudflare Zero Trust**, go to **Access controls** -> **Applications** -> **Add an application** -> **Select Self-hosted**
-# TODO: b.
-# TODO:   - Under **Basic information**:
-# TODO:     - Set an **Application name**, e.g. `my-application`
-# TODO:     - Select a **Session Duration** that works for you, e.g. `24 hours`. This sets the auth session duration for when visiting `myservice.<your-domain>.com`, after which you'll need to sign in again.
-# TODO:     - Click **Add public hostname**, then set values under it:
-# TODO:       - Select **Input method**: `Default`
-# TODO:       - Set **Subdomain** to the same value as before, e.g. `myservice`
-# TODO:       - Set **Domain** to the same value as before, e.g. `<your-domain>.com`
-# TODO:   - Under **Access policies**, we'll create two new policies:
-# TODO:     - Policy 1:
-# TODO:       - Click **Create new policy**. This will open a new tab.
-# TODO:       - Under **Basic Information**:
-# TODO:         - Set **Policy name**: `Humans/browser`
-# TODO:         - Select **Action**: `Allow`
-# TODO:         - Select **Session duration**: `Same as application session timeout`
-# TODO:       - Under **Add rules** -> **Include (OR)**:
-# TODO:         - Define who you want to be able to get through the auth guard at your service in the browser. For example, select **Selector**: `Emails`, and enter specific emails in **Value**, or select **Selector**: `Emails ending in` with **Value**: `@<your-company>.com`.
-# TODO:       - Click **Save** and go back to the previous tab
-# TODO:       - Click **Select existing policies** and choose the policy you just created
-# TODO:     - Policy 2:
-# TODO:       - Click **Create new policy**. This will open a new tab.
-# TODO:       - Under **Basic Information**:
-# TODO:         - Set **Policy name**: `Jobs/non-interactive`
-# TODO:         - Select **Action**: `Service Auth`
-# TODO:         - Select **Session duration**: `No duration, expires immediately`
-# TODO:       - Under **Add rules** -> **Include (OR)**:
-# TODO:         - Select **Selector**: `Service Token`
-# TODO:         - Select **Value** as the token name you created earlier, e.g. `my-service-token`
-# TODO:       - Click **Save** and go back to the previous tab
-# TODO:       - Click **Select existing policies** and choose the policy you just created
-# TODO:   - Under **Login methods**:
-# TODO:     - Turn on **Accept all available identity providers**. You should see **One-time PIN** availabe in the list below.
-# TODO:   - Click **Next**
-# TODO:   - Optional: Under **Application Appearance**, select **Use custom logo** and provide link to your website's favicon!
-# TODO:   - Under **401 Response for Service Auth policies**, turn on **Return 401 response**. This makes it so unauthenticated API clients get a 401 instead of a login page.
-# TODO:   - Click **Save**
+# Step mapping (from README steps 1-4):
+# 1) Create tunnel + DNS + ingress config (see "Step 1" section below)
+# 2) Create service token (see "Step 2" section below)
+# 3) Enable One-time PIN identity provider (see "Step 3" section below)
+# 4) Create Access app + policies (see "Step 4" section below)
 
 require_cmd() {
   local cmd="$1"
