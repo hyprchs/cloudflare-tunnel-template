@@ -262,7 +262,8 @@ if [ -z "$jobs_policy_id" ]; then
     echo "Missing SERVICE_TOKEN_ID for Jobs/non-interactive policy." >&2
     exit 1
   fi
-  jobs_include="$(jq -n --arg id "$SERVICE_TOKEN_ID" '{service_token: {id: $id}}')"
+  # Cloudflare expects service_token.token_id in Access policy rules
+  jobs_include="$(jq -n --arg id "$SERVICE_TOKEN_ID" '{service_token: {token_id: $id}}')"
   jobs_policy_payload="$(jq -n \
     --arg name "Jobs/non-interactive" \
     --argjson include "[${jobs_include}]" \
