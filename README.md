@@ -40,49 +40,51 @@ Pick exactly one of the two options below. Both end with the same Cloudflare set
 
 <summary>Option A (recommended): Run the Cloudflare setup script</summary>
 
-This script replaces the manual Cloudflare UI steps (tunnel, service token, One-time PIN IdP, and Access app + policies)
-and writes `.env` with your tunnel token.
+This script replaces the manual Cloudflare UI steps (tunnel, service token, One-time PIN IdP, and Access app + policies),
+write `.env` file with your tunnel token, and writes an `.env.example` file.
 
-#### Prerequisites (quick links)
-- `CLOUDFLARE_API_TOKEN`: create a custom API token in the Cloudflare dashboard:
-  ```
-  https://dash.cloudflare.com/profile/api-tokens
-  ```
-  When creating the token, select these specific permissions:
-  - Account > Cloudflare Tunnel > Edit
-  - Account > Access: Apps and Policies > Edit
-  - Account > Access: Organizations, Identity Providers, and Groups > Edit
-  - Account > Access: Service Tokens > Edit
-  - Zone > DNS > Edit
-  The tunnel + DNS requirements are documented in the Cloudflare Tunnel API guide, and the Access + IdP permissions are
-  documented in the Access API references for applications and identity providers.
-  Full list of permission names: https://developers.cloudflare.com/fundamentals/api/reference/permissions/
-- `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_ZONE_ID`: open Account Home, select your site, and copy the IDs from the
-  **API** section on the Overview page (Cloudflare docs with screenshots):
-  ```
-  https://dash.cloudflare.com/
-  https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/
-  ```
+#### Prerequisites
 
-```bash
-export CLOUDFLARE_API_TOKEN="..."   # API token with Zero Trust + DNS permissions
-export CLOUDFLARE_ACCOUNT_ID="..."
-export CLOUDFLARE_ZONE_ID="..."
-export APP_DOMAIN="<your-domain>.com"
-export APP_SUBDOMAIN="myservice"
-export ORIGIN_SERVICE="http://example-api:8000"
-export TUNNEL_NAME="my-tunnel"
-export ACCESS_APP_NAME="my-application"
-export SERVICE_TOKEN_NAME="my-service-token"
-export ALLOWED_EMAIL_DOMAIN="example.com"    # or ALLOWED_EMAILS="a@x.com,b@x.com"
-# Optional:
-export ACCESS_SESSION_DURATION="24h"
-export SERVICE_TOKEN_DURATION="8760h"
-export ENV_FILE_PATH="./.env"
-export ENV_TEMPLATE_PATH="./.env.example"
+- [Create an API token](https://dash.cloudflare.com/profile/api-tokens) (**Create Token** → **Create Custom Token**) so the setup script has permission to add the required application/policies/tunnel on your Cloudflare account:
 
-./scripts/cloudflare-setup.sh
-```
+  <img width="875" height="211" alt="image" src="https://github.com/user-attachments/assets/341d61e8-1b9b-4322-b7f0-f612019ec85b" />
+
+- Find your Cloudflare **Account ID** and **Zone ID**: [docs](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/)
+
+- Export env vars, filling in your values:
+  ```bash
+  # Token / IDs from above
+  export CLOUDFLARE_API_TOKEN="..."
+  export CLOUDFLARE_ACCOUNT_ID="..."
+  export CLOUDFLARE_ZONE_ID="..."
+  
+  # Set variables for how your app/service/subdomain will be set up 
+  export APP_DOMAIN="<mydomain.com>"
+  export APP_SUBDOMAIN="<myservice>"                         # Subdomain https://myservice.mydomain.com
+  export ORIGIN_SERVICE="http://example-api:8000"            # `example-api` must be the service name for your service in `docker-compose.yml` (read on to Step 2 for details)
+
+  # Set names for your tunnel/app/token (these can be anything - make them descriptive of your service)
+  export TUNNEL_NAME="<my-tunnel>"
+  export ACCESS_APP_NAME="<my-application>"
+  export SERVICE_TOKEN_NAME="<my-service-token>"
+  
+  # Set ONE of these to limit which emails will be able to get past the Cloudflare Access auth/login screen:
+  export ALLOWED_EMAIL_DOMAIN="<mydomain.com>"               # Allow all `@mydomain.com` emails
+  export ALLOWED_EMAILS="a@mydomain.com,b@mydomain.com"      # Allow only `a@mydomain.com` and `b@mydomain.com`
+  
+  # Set session durations
+  export ACCESS_SESSION_DURATION="24h"                       # Humans need to sign in again after 24hr
+  export SERVICE_TOKEN_DURATION="8760h"                      # Service tokens expire after 1yr
+  
+  # The script will set your `.env(.example)` files in these dirs - change these if you don't want existing files to get overwritten.
+  export ENV_FILE_PATH="./.env"
+  export ENV_TEMPLATE_PATH="./.env.example"
+  ```
+  
+  - In the same shell, run the script:
+  ```sh
+  ./scripts/cloudflare-setup.sh
+  ```
 
 </details>
 
@@ -91,13 +93,13 @@ export ENV_TEMPLATE_PATH="./.env.example"
 <summary>Option B: Manual setup in the Cloudflare dashboard</summary>
 
 #### 1) Create a Cloudflare Tunnel
-a. Go to **Cloudflare Zero Trust**, then go to **Networks** → **Connectors** → **Create a tunnel** → **Select Cloudflared**
+a. Go to **Cloudflare Zero Trust**, then go to **Networks** → **Connectors** → **Create a tunnel** → **Select Cloudflared**.
 
-b. Set a **Tunnel name**, e.g. `my-tunnel`, and click **Save tunnel**
+b. Set a **Tunnel name**, e.g. `my-tunnel`, and click **Save tunnel**.
 
-c. Choose your environment (OS), **Mac**
+c. Choose your environment (OS), **Mac**.
 
-d. If you do not already have `cloudflared` installed (check with `which cloudflared`), now is a good time to run `brew install cloudflared` as this page recommends
+d. If you do not already have `cloudflared` installed (check with `which cloudflared`), now is a good time to run `brew install cloudflared` as this screen recommends.
 
 e. Copy one of the code blocks to get the tunnel token. It isn't shown in full on this page, but you can paste the result somewhere, then copy the full token part.
    Create `.env` from `.env.example`:
@@ -109,7 +111,7 @@ e. Copy one of the code blocks to get the tunnel token. It isn't shown in full o
 f.
   - Under **Hostname**:
     - Set a value for **Subdomain**, e.g. `myservice`
-    - Select your domain from the **Domain** dropdown, e.g. `<your-domain>.com`. Note: Your domain must be on Cloudflare and using Cloudflare DNS (nameservers pointed at Cloudflare), or the subdomain set in this step will not resolve correctly.
+    - Select your domain from the **Domain** dropdown, e.g. `<mydomain.com>`. Note: Your domain must be on Cloudflare and using Cloudflare DNS (nameservers pointed at Cloudflare), or the subdomain set in this step will not resolve correctly.
   - Under **Service**:
     - Select **Type**: `HTTP`
     - Set **URL**: `<container-name>:<port>`, e.g. `example-api:8000`. Here, `container-name` should be the name of your Docker service (which you'll need to set in `src/docker-compose.yml` next to the existing `cloudflared` service), and `port` should be the port that your service's container listens on. See [example/](example/) for a minimal example setup.
@@ -133,11 +135,11 @@ a. While still in **Cloudflare Zero Trust**, go to **Access controls** → **App
 b.
   - Under **Basic information**:
     - Set an **Application name**, e.g. `my-application`
-    - Select a **Session Duration** that works for you, e.g. `24 hours`. This sets the auth session duration for when visiting `myservice.<your-domain>.com`, after which you'll need to sign in again.
+    - Select a **Session Duration** that works for you, e.g. `24 hours`. This sets the auth session duration for when visiting `myservice.<mydomain.com>`, after which you'll need to sign in again.
     - Click **Add public hostname**, then set values under it:
       - Select **Input method**: `Default`
       - Set **Subdomain** to the same value as before, e.g. `myservice`
-      - Set **Domain** to the same value as before, e.g. `<your-domain>.com`
+      - Set **Domain** to the same value as before, e.g. `<mydomain.com>`
   - Under **Access policies**, we'll create two new policies:
     - Policy 1:
       - Click **Create new policy**. This will open a new tab.
@@ -146,7 +148,7 @@ b.
         - Select **Action**: `Allow`
         - Select **Session duration**: `Same as application session timeout`
       - Under **Add rules** → **Include (OR)**:
-        - Define who you want to be able to get through the auth guard at your service in the browser. For example, select **Selector**: `Emails`, and enter specific emails in **Value**, or select **Selector**: `Emails ending in` with **Value**: `@<your-company>.com`.
+        - Define who you want to be able to get through the auth guard at your service in the browser. For example, select **Selector**: `Emails`, and enter specific emails in **Value**, or select **Selector**: `Emails ending in` with **Value**: `@<your-company.com>`.
       - Click **Save** and go back to the previous tab
       - Click **Select existing policies** and choose the policy you just created
     - Policy 2:
@@ -193,7 +195,7 @@ b.
           image: my-org/my-image:latest
       ```
 - Update **`src/cloudflared.yml`**:
-  - Replace **`<subdomain>`** and **`<your-domain>`** in the **`hostname`** line to your own values
+  - Replace **`<subdomain>`** and **`<mydomain>`** in the **`hostname`** line to your own values
   - Replace **`<container-name>`** with the service name you chose earlier, e.g. `my-service`
   - Replace **`<port>`** with the port your service's container listens on. For example, you might start your service with `--port 8000`; the port may be defined elsewhere in the code that your container runs; or your Dockerfile might have `EXPOSE 8000` (note: `EXPOSE` is helpful but not required to set in your Dockerfile).
 
