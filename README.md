@@ -148,7 +148,7 @@ b.
         - Select **Action**: `Allow`
         - Select **Session duration**: `Same as application session timeout`
       - Under **Add rules** → **Include (OR)**:
-        - Define who you want to be able to get through the auth guard at your service in the browser. For example, select **Selector**: `Emails`, and enter specific emails in **Value**, or select **Selector**: `Emails ending in` with **Value**: `@<your-company.com>`.
+        - Define who you want to be able to get through the auth guard at your service in the browser. For example, select **Selector**: `Emails`, and enter specific emails in **Value**, or select **Selector**: `Emails ending in` with **Value**: `@<mydomain.com>`.
       - Click **Save** and go back to the previous tab
       - Click **Select existing policies** and choose the policy you just created
     - Policy 2:
@@ -195,7 +195,7 @@ b.
           image: my-org/my-image:latest
       ```
 - Update **`src/cloudflared.yml`**:
-  - Replace **`<subdomain>`** and **`<mydomain>`** in the **`hostname`** line to your own values
+  - Replace **`<subdomain>`** and **`<mydomain.com>`** in the **`hostname`** line to your own values
   - Replace **`<container-name>`** with the service name you chose earlier, e.g. `my-service`
   - Replace **`<port>`** with the port your service's container listens on. For example, you might start your service with `--port 8000`; the port may be defined elsewhere in the code that your container runs; or your Dockerfile might have `EXPOSE 8000` (note: `EXPOSE` is helpful but not required to set in your Dockerfile).
 
@@ -205,9 +205,9 @@ cd src
 docker compose up -d
 ```
 
-## Security notes (read this)
-- Do **not** publish your origin service with `ports:` in docker-compose unless you *really* mean to expose it outside Cloudflare Access.
-  - `ports:` creates a second, direct entrypoint to the service that bypasses Access (host/LAN reachability, firewall mistakes, etc.).
-  - If you need local debugging, bind to localhost only: `127.0.0.1:8000:8000`
+## Security notes
+- Do **not** publish your origin service with `ports:` in docker-compose unless you know what you're doing and mean to expose it outside Cloudflare Access.
+  - `ports:` creates a second, direct entrypoint to the service that bypasses Access (allows host/LAN reachability, exposes you to vulnerabilities if you have firewall mistakes, etc.).
+  - If you need local debugging, bind to localhost only: `127.0.0.1:8000:8000`, **NOT** `0.0.0.0`
 - Never commit `.env` / tunnel tokens / service tokens. Rotate immediately if exposed.
 - Cloudflare Access is the front door; your origin app still needs normal hardening (authz, input validation, rate limits, etc.).
