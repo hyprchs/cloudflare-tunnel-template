@@ -5,3 +5,14 @@ services:
     command: tunnel --config /etc/cloudflared/config.yml --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN:?set CLOUDFLARE_TUNNEL_TOKEN}
     volumes:
       - ./cloudflared.yml:/etc/cloudflared/config.yml:ro
+
+  # NOTE:
+  # Avoid adding `ports:` to your origin service in production.
+  # That would expose the service directly (bypassing Cloudflare Access).
+  # If you need local debugging, bind to localhost only, e.g.:
+  # ports:
+  #   - "127.0.0.1:8000:8000"
+  #
+  # You can also use `expose:` to document the port without publishing it:
+  # expose:
+  #   - "8000"  # internal to docker network only (cloudflared can reach it)
