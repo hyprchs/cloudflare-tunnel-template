@@ -53,7 +53,7 @@ write `.env` file with your tunnel token, and writes an `.env.example` file.
   
   Optional: Select **TTL End Date** to be short-lived, e.g. one day in the future (you'll only need this key once for running the setup script).
 
-- Find your Cloudflare **Account ID** and **Zone ID**: [docs](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/)
+- [Find your Cloudflare **Account ID** and **Zone ID**](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/)
 
 - Export env vars, filling in your values:
   ```bash
