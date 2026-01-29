@@ -110,6 +110,12 @@ if [ -z "$TUNNEL_TOKEN" ]; then
 fi
 
 if [ -z "$TUNNEL_TOKEN" ]; then
+  token_resp="$(cf_api GET "/accounts/${CLOUDFLARE_ACCOUNT_ID}/cfd_tunnel/${TUNNEL_ID}/token")"
+  ensure_success "$token_resp"
+  TUNNEL_TOKEN="$(echo "$token_resp" | jq -r '.result.token // .result // empty')"
+fi
+
+if [ -z "$TUNNEL_TOKEN" ]; then
   echo "Could not retrieve tunnel token. Set TUNNEL_TOKEN manually." >&2
   exit 1
 fi
