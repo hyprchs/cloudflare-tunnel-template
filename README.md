@@ -20,7 +20,7 @@ At [Hyperchess](https://hyperchess.ai) ([GitHub](https://github.com/hyprchs/)), 
 - MLflow for training observability (https://mlflow.hyperchess.ai)
 - Inference servers for chat completion requests, running on a local GPU! (https://api.hyperchess.ai)
 
-This lets us self-host our full microservice stack during development (from a laptop!), keeping cloud costs at $0,
+This lets us self-host our full microservice stack during development (from a laptop!), keep cloud costs at $0,
 and progressively transition to cloud providers as-needed while we scale.
 
 A few other notes:
