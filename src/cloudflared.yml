@@ -1,4 +1,4 @@
 ingress:
   - hostname: <subdomain>.<your-domain>.com
-    service: http://<container-name>:<port>
+    service: http://<service-name>:<port>
   - service: http_status:404

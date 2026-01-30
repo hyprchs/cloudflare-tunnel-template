@@ -58,7 +58,7 @@ Note: These instructions were tested on Mac only.
       ```
 - Update **`src/cloudflared.yml`**:
   - Replace **`<subdomain>`** and **`<mydomain.com>`** in the **`hostname`** line to your own values
-  - Replace **`<container-name>`** with the service name you chose earlier, e.g. `my-service`.
+  - Replace **`<service-name>`** with the service name you chose earlier, e.g. `my-service`.
   - Replace **`<port>`** with the port your service's container listens on. For example, you might start your service with `--port 8000`; the port may be defined elsewhere in the code that your container runs; or your Dockerfile might have `EXPOSE 8000` (note: `EXPOSE` is helpful but not required to set in your Dockerfile).
   - Note: You’ll use the same subdomain, service name, and port in Step 2.
 
@@ -160,7 +160,7 @@ f.
     - Select your domain from the **Domain** dropdown, e.g. `<mydomain.com>`. Note: Your domain must be on Cloudflare and using Cloudflare DNS (nameservers pointed at Cloudflare), or the subdomain set in this step will not resolve correctly.
   - Under **Service**:
     - Select **Type**: `HTTP`
-    - Set **URL**: `<container-name>:<port>`, e.g. `example-api:8000`. Use the service name + port you set in Step 1. See [example/](example/) for a minimal example setup.
+    - Set **URL**: `<service-name>:<port>`, e.g. `example-api:8000`. Use the service name + port you set in Step 1. See [example/](example/) for a minimal example setup.
   - Click **Complete setup**
 
 #### 2) Create a Service Token
