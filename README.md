@@ -33,7 +33,35 @@ A few other notes:
 ## Quickstart
 Note: These instructions were tested on Mac only.
 
-### 1) Set up Cloudflare (choose one)
+### 1) Bring your own Dockerized service
+- Edit `src/docker-compose.yml` by adding your service under **`services:`**. Choose whatever name you like for the service, e.g. `my-service` (you'll use this in the next step).
+  Use one of these two patterns:
+  - Build from a local Dockerfile:
+    - Put a `Dockerfile` in a folder, e.g. under `./my-service/`
+    - Add this to **`src/docker-compose.yml`**:
+      ```yaml
+      services:
+        cloudflared:
+          ...
+        my-service:
+          build:
+            context: ./my-service
+      ```
+  - Use a prebuilt image:
+    - Add this to **`src/docker-compose.yml`**:
+      ```yaml
+      services:
+        cloudflared:
+          ...
+        my-service:
+          image: my-org/my-image:latest
+      ```
+- Update **`src/cloudflared.yml`**:
+  - Replace **`<subdomain>`** and **`<mydomain.com>`** in the **`hostname`** line to your own values
+  - Replace **`<container-name>`** with the service name you chose earlier, e.g. `my-service`
+  - Replace **`<port>`** with the port your service's container listens on. For example, you might start your service with `--port 8000`; the port may be defined elsewhere in the code that your container runs; or your Dockerfile might have `EXPOSE 8000` (note: `EXPOSE` is helpful but not required to set in your Dockerfile).
+
+### 2) Set up Cloudflare (choose one)
 Pick exactly one of the two options below. Both end with the same Cloudflare setup (tunnel + Access app + policies).
 
 <details>
@@ -187,34 +215,6 @@ b.
   - Click **Save**
 
 </details>
-
-### 2) Bring your own Dockerized service
-- Edit `src/docker-compose.yml` by adding your service under **`services:`**. Choose whatever name you like for the service, e.g. `my-service` (you'll use this in the next step).
-  Use one of these two patterns:
-  - Build from a local Dockerfile:
-    - Put a `Dockerfile` in a folder, e.g. under `./my-service/`
-    - Add this to **`src/docker-compose.yml`**:
-      ```yaml
-      services:
-        cloudflared:
-          ...
-        my-service:
-          build:
-            context: ./my-service
-      ```
-  - Use a prebuilt image:
-    - Add this to **`src/docker-compose.yml`**:
-      ```yaml
-      services:
-        cloudflared:
-          ...
-        my-service:
-          image: my-org/my-image:latest
-      ```
-- Update **`src/cloudflared.yml`**:
-  - Replace **`<subdomain>`** and **`<mydomain.com>`** in the **`hostname`** line to your own values
-  - Replace **`<container-name>`** with the service name you chose earlier, e.g. `my-service`
-  - Replace **`<port>`** with the port your service's container listens on. For example, you might start your service with `--port 8000`; the port may be defined elsewhere in the code that your container runs; or your Dockerfile might have `EXPOSE 8000` (note: `EXPOSE` is helpful but not required to set in your Dockerfile).
 
 ### 3) Start the tunnel
 ```bash
