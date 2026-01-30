@@ -58,6 +58,7 @@ export ENV_TEMPLATE_PATH="example/.env.example"
 
 ### 3) Start the tunnel
 ```bash
+cd example
 docker compose up -d --build
 ```
 
