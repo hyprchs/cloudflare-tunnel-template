@@ -1,5 +1,20 @@
-# Example: FastAPI + Cloudflare Tunnel
+<div align="center">
+  <h1>cloudflare-tunnel-template</h1>
+  <p>
+    <img alt="Cloudflare Tunnel" src="https://img.shields.io/badge/Cloudflare-Tunnel-F38020?logo=cloudflare&logoColor=white" />
+    <img alt="Cloudflare Access" src="https://img.shields.io/badge/Cloudflare-Access-F38020?logo=cloudflare&logoColor=white" />
+    <img alt="Docker Compose" src="https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white" />
+  </p>
+  <p>
+    <a href="#project-structure">Project structure</a> |
+    <a href="#quickstart">Quickstart</a> |
+    <a href="#security-notes">Security notes</a>
+  </p>
+</div>
 
+---
+
+Example: FastAPI + Cloudflare Tunnel.
 This directory is a standalone, working example built from the template.
 It keeps the same `cloudflared.yml` + `docker-compose.yml` layout and adds a tiny FastAPI service.
 
