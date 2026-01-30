@@ -31,23 +31,47 @@ Run this from the repo root.
   https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/
   ```
 
+- Env vars you’ll set:
+  - `CLOUDFLARE_API_TOKEN`: API token from the dashboard
+  - `CLOUDFLARE_ACCOUNT_ID` / `CLOUDFLARE_ZONE_ID`: IDs from your domain’s Overview page
+  - `APP_DOMAIN`: your domain (e.g. `your-domain.com`)
+  - `APP_SUBDOMAIN`: subdomain to create (e.g. `example`)
+  - `ORIGIN_SERVICE`: internal URL to the example container (`example-api` in `example/docker-compose.yml`)
+  - `TUNNEL_NAME`, `ACCESS_APP_NAME`, `SERVICE_TOKEN_NAME`: friendly names (any values)
+  - `ALLOWED_EMAIL_DOMAIN` or `ALLOWED_EMAILS`: who can pass Access auth
+  - Optional: `ACCESS_SESSION_DURATION`, `SERVICE_TOKEN_DURATION`, `ENV_FILE_PATH`, `ENV_TEMPLATE_PATH`
+
+Export env vars (copy/paste friendly):
 ```bash
-export CLOUDFLARE_API_TOKEN="..."   # API token with Zero Trust + DNS permissions
+export CLOUDFLARE_API_TOKEN="..."
 export CLOUDFLARE_ACCOUNT_ID="..."
 export CLOUDFLARE_ZONE_ID="..."
-export APP_DOMAIN="<your-domain>.com"
+export APP_DOMAIN="your-domain.com"
 export APP_SUBDOMAIN="example"
 export ORIGIN_SERVICE="http://example-api:8000"
 export TUNNEL_NAME="example-tunnel"
 export ACCESS_APP_NAME="example-app"
 export SERVICE_TOKEN_NAME="example-service-token"
-export ALLOWED_EMAIL_DOMAIN="example.com"    # or ALLOWED_EMAILS="a@x.com,b@x.com"
-# Optional:
+```
+
+Choose one Access allowlist option (run in the same shell before the script):
+```bash
+export ALLOWED_EMAIL_DOMAIN="example.com"
+```
+```bash
+export ALLOWED_EMAILS="a@x.com,b@x.com"
+```
+
+Optional overrides:
+```bash
 export ACCESS_SESSION_DURATION="24h"
 export SERVICE_TOKEN_DURATION="8760h"
 export ENV_FILE_PATH="example/.env"
 export ENV_TEMPLATE_PATH="example/.env.example"
+```
 
+Run the script from the repo root (same shell as exports):
+```bash
 ./scripts/cloudflare-setup.sh
 ```
 
@@ -58,6 +82,7 @@ export ENV_TEMPLATE_PATH="example/.env.example"
 
 ### 3) Start the tunnel
 ```bash
+cd example
 docker compose up -d --build
 ```
 
