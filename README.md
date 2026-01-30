@@ -58,9 +58,9 @@ Note: These instructions were tested on Mac only.
       ```
 - Update **`src/cloudflared.yml`**:
   - Replace **`<subdomain>`** and **`<mydomain.com>`** in the **`hostname`** line to your own values
-  - Replace **`<container-name>`** with the service name you chose earlier, e.g. `my-service`
+  - Replace **`<container-name>`** with the service name you chose earlier, e.g. `my-service`.
   - Replace **`<port>`** with the port your service's container listens on. For example, you might start your service with `--port 8000`; the port may be defined elsewhere in the code that your container runs; or your Dockerfile might have `EXPOSE 8000` (note: `EXPOSE` is helpful but not required to set in your Dockerfile).
-- You’ll use this same service name + port when setting `ORIGIN_SERVICE` in Step 2.
+  - Note: You’ll use the same subdomain, service name, and port in Step 2.
 
 ### 2) Set up Cloudflare (choose one)
 Pick exactly one of the two options below. Both end with the same Cloudflare setup (tunnel + Access app + policies).
