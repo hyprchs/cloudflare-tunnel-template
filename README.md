@@ -55,46 +55,37 @@ write `.env` file with your tunnel token, and writes an `.env.example` file.
 
 - [Find your Cloudflare **Account ID** and **Zone ID**](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/)
 
-- Env vars you’ll set:
-  - `CLOUDFLARE_API_TOKEN`: API token from the dashboard
-  - `CLOUDFLARE_ACCOUNT_ID` / `CLOUDFLARE_ZONE_ID`: IDs from your domain’s Overview page
-  - `APP_DOMAIN`: your domain (e.g. `mydomain.com`)
-  - `APP_SUBDOMAIN`: subdomain to create (e.g. `myservice`)
-  - `ORIGIN_SERVICE`: internal URL to your service container (service name comes from `docker-compose.yml` in Step 2)
-  - `TUNNEL_NAME`, `ACCESS_APP_NAME`, `SERVICE_TOKEN_NAME`: friendly names (any values)
-  - `ALLOWED_EMAIL_DOMAIN` or `ALLOWED_EMAILS`: who can pass Access auth
-  - Optional: `ACCESS_SESSION_DURATION`, `SERVICE_TOKEN_DURATION`, `ENV_FILE_PATH`, `ENV_TEMPLATE_PATH`
-
-- Export env vars (copy/paste friendly):
+- Export env vars, filling in your values:
   ```bash
+  # Token / IDs from above
   export CLOUDFLARE_API_TOKEN="..."
   export CLOUDFLARE_ACCOUNT_ID="..."
   export CLOUDFLARE_ZONE_ID="..."
-  export APP_DOMAIN="mydomain.com"
-  export APP_SUBDOMAIN="myservice"
-  export ORIGIN_SERVICE="http://my-service:8000"
-  export TUNNEL_NAME="my-tunnel"
-  export ACCESS_APP_NAME="my-application"
-  export SERVICE_TOKEN_NAME="my-service-token"
-  ```
+  
+  # Set variables for how your app/service/subdomain will be set up 
+  export APP_DOMAIN="<mydomain.com>"
+  export APP_SUBDOMAIN="<myservice>"                         # Subdomain https://myservice.mydomain.com
+  export ORIGIN_SERVICE="http://example-api:8000"            # `example-api` must be the service name for your service in `docker-compose.yml` (read on to Step 2 for details)
 
-- Choose one Access allowlist option:
-  ```bash
-  export ALLOWED_EMAIL_DOMAIN="mydomain.com"
-  ```
-  ```bash
-  export ALLOWED_EMAILS="a@mydomain.com,b@mydomain.com"
-  ```
-
-- Optional overrides:
-  ```bash
-  export ACCESS_SESSION_DURATION="24h"
-  export SERVICE_TOKEN_DURATION="8760h"
+  # Set names for your tunnel/app/token (these can be anything - make them descriptive of your service)
+  export TUNNEL_NAME="<my-tunnel>"
+  export ACCESS_APP_NAME="<my-application>"
+  export SERVICE_TOKEN_NAME="<my-service-token>"
+  
+  # Set ONE of these to limit which emails will be able to get past the Cloudflare Access auth/login screen:
+  export ALLOWED_EMAIL_DOMAIN="<mydomain.com>"               # Allow all `@mydomain.com` emails
+  export ALLOWED_EMAILS="a@mydomain.com,b@mydomain.com"      # Allow only `a@mydomain.com` and `b@mydomain.com`
+  
+  # Set session durations
+  export ACCESS_SESSION_DURATION="24h"                       # Humans need to sign in again after 24hr
+  export SERVICE_TOKEN_DURATION="8760h"                      # Service tokens expire after 1yr
+  
+  # The script will set your `.env(.example)` files in these dirs - change these if you don't want existing files to get overwritten.
   export ENV_FILE_PATH="./.env"
   export ENV_TEMPLATE_PATH="./.env.example"
   ```
-
-- In the same shell, run the script:
+  
+  - In the same shell, run the script:
   ```sh
   ./scripts/cloudflare-setup.sh
   ```
