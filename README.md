@@ -55,7 +55,7 @@ write `.env` file with your tunnel token, and writes an `.env.example` file.
 
 - [Find your Cloudflare **Account ID** and **Zone ID**](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/)
 
-- Env vars (one per row):
+- Export env vars. Important: Be sure to set at least one of `ALLOWED_EMAIL_DOMAIN` or `ALLOWED_EMAILS` (both also works).
 
   | Env var | Description | Example |
   | --- | --- | --- |
@@ -68,16 +68,13 @@ write `.env` file with your tunnel token, and writes an `.env.example` file.
   | `TUNNEL_NAME` | Tunnel name | `my-tunnel` |
   | `ACCESS_APP_NAME` | Access app name | `my-application` |
   | `SERVICE_TOKEN_NAME` | Service token name | `my-service-token` |
-  | `ALLOWED_EMAIL_DOMAIN` | Allowlist by email domain (set at least one allowlist value) | `mydomain.com` |
-  | `ALLOWED_EMAILS` | Allowlist by specific emails (set at least one allowlist value) | `a@mydomain.com,b@mydomain.com` |
+  | `ALLOWED_EMAIL_DOMAIN` | Auth allowlist by email domain | `mydomain.com` to allow all `@mydomain.com` users |
+  | `ALLOWED_EMAILS` | Auth allowlist by specific emails | `a@mydomain.com,b@mydomain.com` to allow specific users |
   | `ACCESS_SESSION_DURATION` | Optional session duration for humans | `24h` |
   | `SERVICE_TOKEN_DURATION` | Optional service token duration | `8760h` |
-  | `ENV_FILE_PATH` | Optional `.env` output path | `./.env` |
-  | `ENV_TEMPLATE_PATH` | Optional `.env.example` template path | `./.env.example` |
+  | `ENV_FILE_PATH` | Optional `.env` output path (change to avoid overwriting an existing one) | `./.env` |
+  | `ENV_TEMPLATE_PATH` | Optional `.env.example` template output path (change to avoid overwriting an existing one) | `./.env.example` |
 
-- Set at least one of `ALLOWED_EMAIL_DOMAIN` or `ALLOWED_EMAILS` (both also works).
-
-- Export env vars (single copy/paste block):
   ```bash
   export CLOUDFLARE_API_TOKEN="..."
   export CLOUDFLARE_ACCOUNT_ID="..."
