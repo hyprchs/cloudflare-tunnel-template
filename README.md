@@ -60,6 +60,7 @@ Note: These instructions were tested on Mac only.
   - Replace **`<subdomain>`** and **`<mydomain.com>`** in the **`hostname`** line to your own values
   - Replace **`<container-name>`** with the service name you chose earlier, e.g. `my-service`
   - Replace **`<port>`** with the port your service's container listens on. For example, you might start your service with `--port 8000`; the port may be defined elsewhere in the code that your container runs; or your Dockerfile might have `EXPOSE 8000` (note: `EXPOSE` is helpful but not required to set in your Dockerfile).
+- You’ll use this same service name + port when setting `ORIGIN_SERVICE` in Step 2.
 
 ### 2) Set up Cloudflare (choose one)
 Pick exactly one of the two options below. Both end with the same Cloudflare setup (tunnel + Access app + policies).
@@ -92,7 +93,7 @@ write `.env` file with your tunnel token, and writes an `.env.example` file.
   | `CLOUDFLARE_ZONE_ID` | Cloudflare zone ID | `...` |
   | `APP_DOMAIN` | Your domain | `mydomain.com` |
   | `APP_SUBDOMAIN` | Subdomain to create | `myservice` |
-  | `ORIGIN_SERVICE` | Internal URL to your service container (service name comes from `docker-compose.yml` in Step 2) | `http://my-service:8000` |
+  | `ORIGIN_SERVICE` | Internal URL to your service container (service name comes from `docker-compose.yml` in Step 1) | `http://my-service:8000` |
   | `TUNNEL_NAME` | Tunnel name | `my-tunnel` |
   | `ACCESS_APP_NAME` | Access app name | `my-application` |
   | `SERVICE_TOKEN_NAME` | Service token name | `my-service-token` |
@@ -159,7 +160,7 @@ f.
     - Select your domain from the **Domain** dropdown, e.g. `<mydomain.com>`. Note: Your domain must be on Cloudflare and using Cloudflare DNS (nameservers pointed at Cloudflare), or the subdomain set in this step will not resolve correctly.
   - Under **Service**:
     - Select **Type**: `HTTP`
-    - Set **URL**: `<container-name>:<port>`, e.g. `example-api:8000`. Here, `container-name` should be the name of your Docker service (which you'll need to set in `src/docker-compose.yml` next to the existing `cloudflared` service), and `port` should be the port that your service's container listens on. See [example/](example/) for a minimal example setup.
+    - Set **URL**: `<container-name>:<port>`, e.g. `example-api:8000`. Use the service name + port you set in Step 1. See [example/](example/) for a minimal example setup.
   - Click **Complete setup**
 
 #### 2) Create a Service Token
