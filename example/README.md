@@ -31,25 +31,56 @@ Run this from the repo root.
   https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/
   ```
 
-```bash
-export CLOUDFLARE_API_TOKEN="..."   # API token with Zero Trust + DNS permissions
-export CLOUDFLARE_ACCOUNT_ID="..."
-export CLOUDFLARE_ZONE_ID="..."
-export APP_DOMAIN="<your-domain>.com"
-export APP_SUBDOMAIN="example"
-export ORIGIN_SERVICE="http://example-api:8000"
-export TUNNEL_NAME="example-tunnel"
-export ACCESS_APP_NAME="example-app"
-export SERVICE_TOKEN_NAME="example-service-token"
-export ALLOWED_EMAIL_DOMAIN="example.com"    # or ALLOWED_EMAILS="a@x.com,b@x.com"
-# Optional:
-export ACCESS_SESSION_DURATION="24h"
-export SERVICE_TOKEN_DURATION="8760h"
-export ENV_FILE_PATH="example/.env"
-export ENV_TEMPLATE_PATH="example/.env.example"
+- Env vars (one per row):
 
-./scripts/cloudflare-setup.sh
-```
+  | Env var | Description | Example |
+  | --- | --- | --- |
+  | `CLOUDFLARE_API_TOKEN` | API token from the dashboard | `...` |
+  | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID | `...` |
+  | `CLOUDFLARE_ZONE_ID` | Cloudflare zone ID | `...` |
+  | `APP_DOMAIN` | Your domain | `your-domain.com` |
+  | `APP_SUBDOMAIN` | Subdomain to create | `example` |
+  | `ORIGIN_SERVICE` | Internal URL to the example container (`example-api` in `example/docker-compose.yml`) | `http://example-api:8000` |
+  | `TUNNEL_NAME` | Tunnel name | `example-tunnel` |
+  | `ACCESS_APP_NAME` | Access app name | `example-app` |
+  | `SERVICE_TOKEN_NAME` | Service token name | `example-service-token` |
+  | `ALLOWED_EMAIL_DOMAIN` | Allowlist by email domain (set at least one allowlist value) | `example.com` |
+  | `ALLOWED_EMAILS` | Allowlist by specific emails (set at least one allowlist value) | `a@x.com,b@x.com` |
+  | `ACCESS_SESSION_DURATION` | Optional session duration for humans | `24h` |
+  | `SERVICE_TOKEN_DURATION` | Optional service token duration | `8760h` |
+  | `ENV_FILE_PATH` | Optional `.env` output path | `example/.env` |
+  | `ENV_TEMPLATE_PATH` | Optional `.env.example` template path | `example/.env.example` |
+
+- Set at least one of `ALLOWED_EMAIL_DOMAIN` or `ALLOWED_EMAILS` (both also works).
+
+- Export env vars (single copy/paste block):
+  ```bash
+  export CLOUDFLARE_API_TOKEN="..."
+  export CLOUDFLARE_ACCOUNT_ID="..."
+  export CLOUDFLARE_ZONE_ID="..."
+
+  export APP_DOMAIN="your-domain.com"
+  export APP_SUBDOMAIN="example"
+  export ORIGIN_SERVICE="http://example-api:8000"
+
+  export TUNNEL_NAME="example-tunnel"
+  export ACCESS_APP_NAME="example-app"
+  export SERVICE_TOKEN_NAME="example-service-token"
+
+  export ALLOWED_EMAIL_DOMAIN="example.com"
+  export ALLOWED_EMAILS="a@x.com,b@x.com"
+
+  export ACCESS_SESSION_DURATION="24h"
+  export SERVICE_TOKEN_DURATION="8760h"
+
+  export ENV_FILE_PATH="example/.env"
+  export ENV_TEMPLATE_PATH="example/.env.example"
+  ```
+
+- Run the script from the repo root (same shell as exports):
+  ```bash
+  ./scripts/cloudflare-setup.sh
+  ```
 
 ### 2) Update `cloudflared.yml`
 - Confirm `hostname` is set to `example.<your-domain>.com`
