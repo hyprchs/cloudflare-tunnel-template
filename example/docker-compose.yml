@@ -1,6 +1,7 @@
 services:
   cloudflared:
-    image: cloudflare/cloudflared:latest
+    # amd64 digest; swap to arm64 tag+digest if needed.
+    image: cloudflare/cloudflared:2026.1.2-amd64@sha256:e6aba36f47b17ba21c62404f826e7be09f089dc0d8978732752204a75d9d7375
     restart: unless-stopped
     command: tunnel --config /etc/cloudflared/config.yml --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN:?set CLOUDFLARE_TUNNEL_TOKEN}
     volumes:
