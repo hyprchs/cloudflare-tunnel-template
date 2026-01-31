@@ -84,7 +84,7 @@ Pick exactly one of the two options below. Both end with the same Cloudflare set
 <summary>Option A (recommended): Run the Cloudflare setup script</summary>
 
 This script replaces the manual Cloudflare UI steps (tunnel, service token, One-time PIN IdP, and Access app + policies),
-write `.env` file with your tunnel token, and writes an `.env.example` file.
+writes `.env` with your tunnel token (and service token credentials when created), and writes an `.env.example` file.
 
 #### Prerequisites
 
@@ -184,7 +184,8 @@ b.
   - Set a **Service token name**, e.g. `my-service-token`
   - Select a **Service Token Duration**: `Non-expiring`
   - Click **Generate token**
-  - Copy/save your **Header and client secret** for later, it's only available once on this screen.
+  - Copy/save your **Client ID** and **Client Secret** (only available once on this screen).
+  - Update `.env` with `CF_ACCESS_CLIENT_ID=<client id>` and `CF_ACCESS_CLIENT_SECRET=<client secret>`.
 
 #### 3) Enable One-time PIN identity provider
 While still in **Cloudflare Zero Trust**, go to **Integrations** → **Identity providers** → **Add an identity provider** → **One-time PIN**; it should show **Added**.

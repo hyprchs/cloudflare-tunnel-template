@@ -205,6 +205,36 @@ if [ -z "$SERVICE_TOKEN_ID" ]; then
   SERVICE_TOKEN_ID="$(echo "$service_token_resp" | jq -r '.result.id')"
   SERVICE_TOKEN_CLIENT_ID="$(echo "$service_token_resp" | jq -r '.result.client_id')"
   SERVICE_TOKEN_CLIENT_SECRET="$(echo "$service_token_resp" | jq -r '.result.client_secret')"
+
+  if [ -n "$SERVICE_TOKEN_CLIENT_ID" ] && [ -n "$SERVICE_TOKEN_CLIENT_SECRET" ]; then
+    tmp_env="$(mktemp)"
+    awk -v client_id="$SERVICE_TOKEN_CLIENT_ID" -v client_secret="$SERVICE_TOKEN_CLIENT_SECRET" '
+      BEGIN { found_id = 0; found_secret = 0 }
+      /^CF_ACCESS_CLIENT_ID=/ {
+        print "CF_ACCESS_CLIENT_ID=" client_id
+        found_id = 1
+        next
+      }
+      /^CF_ACCESS_CLIENT_SECRET=/ {
+        print "CF_ACCESS_CLIENT_SECRET=" client_secret
+        found_secret = 1
+        next
+      }
+      { print }
+      END {
+        if (!found_id) {
+          print "CF_ACCESS_CLIENT_ID=" client_id
+        }
+        if (!found_secret) {
+          print "CF_ACCESS_CLIENT_SECRET=" client_secret
+        }
+      }
+    ' "$ENV_FILE_PATH" > "$tmp_env"
+    mv "$tmp_env" "$ENV_FILE_PATH"
+    echo "Updated ${ENV_FILE_PATH} with CF_ACCESS_CLIENT_ID and CF_ACCESS_CLIENT_SECRET"
+  else
+    echo "Service token created, but missing client credentials to write to ${ENV_FILE_PATH}." >&2
+  fi
 else
   echo "Service token already exists: ${SERVICE_TOKEN_NAME}"
 fi
