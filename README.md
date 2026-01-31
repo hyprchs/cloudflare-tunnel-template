@@ -14,7 +14,7 @@
 
 ---
 
-Template repo for exposing a local service (UI or API) through Cloudflare Tunnel + Access.
+Template repo for exposing a local Docker service (e.g. a UI or API) through Cloudflare Tunnel + Access.
 
 ### Project structure
 ```
