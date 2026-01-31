@@ -202,9 +202,9 @@ if [ -z "$SERVICE_TOKEN_ID" ]; then
   fi
   service_token_resp="$(cf_api POST "/accounts/${CLOUDFLARE_ACCOUNT_ID}/access/service_tokens" "$service_token_payload")"
   ensure_success "$service_token_resp"
-  SERVICE_TOKEN_ID="$(echo "$service_token_resp" | jq -r '.result.id')"
-  SERVICE_TOKEN_CLIENT_ID="$(echo "$service_token_resp" | jq -r '.result.client_id')"
-  SERVICE_TOKEN_CLIENT_SECRET="$(echo "$service_token_resp" | jq -r '.result.client_secret')"
+  SERVICE_TOKEN_ID="$(echo "$service_token_resp" | jq -r '.result.id // empty')"
+  SERVICE_TOKEN_CLIENT_ID="$(echo "$service_token_resp" | jq -r '.result.client_id // empty')"
+  SERVICE_TOKEN_CLIENT_SECRET="$(echo "$service_token_resp" | jq -r '.result.client_secret // empty')"
 
   if [ -n "$SERVICE_TOKEN_CLIENT_ID" ] && [ -n "$SERVICE_TOKEN_CLIENT_SECRET" ]; then
     tmp_env="$(mktemp)"
